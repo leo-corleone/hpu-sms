@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="org.sms.mapper.ClassMapper">
+   
+   
+   <select id="queryOneClassById" parameterType="Integer" resultMap="Class_resultMap">
+       select * from class where id = #{id}
+   </select>
+   
+   <select id="queryALLClassName" resultType="HashMap">
+      select name from class 
+   </select>
+   
+   <select id="queryClassNameByDepartment"  parameterType="String" resultType="HashMap">
+      select name from class where department = #{department}
+   </select>
+   
+   <select id="queryAllClass" parameterType="org.sms.util.QueryUtil"  resultMap="Class_resultMap">
+      select * from class 
+      <if test="keyword != null and keyword != ''">
+       <where>
+	       name like '%${keyword}%'
+	    or department like '%${keyword}%'
+	    or number like '%${keyword}%'
+	    or tutor in (select id from teacher where id like '%${keyword}%')
+       </where>
+      </if>
+      <if test="sort != null">
+               order by ${sort} ${order}
+      </if>
+   </select>   
+   
+   <!-- 选择性的展示某些字段 此查询用于学生级联查询的 -->
+   <select id="queryOneClassByName" parameterType="String" resultMap="Class_resultMap">
+      select name ,tutor , department from class where name = #{name}
+   </select>
+   
+   <select id="isConflictClassName" parameterType="Clazz" resultType="Integer">
+     select count(1) from class where name = #{name}
+   </select>
+   
+   <select id="queryClassIdAndNameByTutor" parameterType="Integer" resultType="hashmap">
+     select id, name from class where tutor = #{id};
+   </select>
+   
+   <resultMap type="Clazz" id="Class_resultMap">
+      <association property="tutor" column="tutor" javaType="String" jdbcType="INTEGER"  select="org.sms.mapper.TeacherMapper.queryNameOfTeacherById">
+      </association>
+   </resultMap>
+ 
+   <insert id="insertSingleClass" parameterType="Clazz">
+     <choose>
+        <when test="remark !='' and remark != null">
+        insert into class(name,tutor,department,remark) values(#{name},#{tutor},#{department},#{remark})
+        </when>
+        <otherwise>
+         insert into class(name,tutor,department) values(#{name},#{tutor},#{department})
+        </otherwise>
+     </choose>
+   </insert>
+   
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="org.sms.mapper.AdministratorMapper">
+ 
+    <select id="queryAdministrator" parameterType="Administrator" resultType="Administrator">
+         select * from administrator where loginname = #{loginname} and password = #{password}
+    </select>
+ 
+    <update id="updateAdministratorPwdById" parameterType="Administrator">
+        update administrator  set password = #{password} where id = #{id}  
+    </update>
+ 
+</mapper>

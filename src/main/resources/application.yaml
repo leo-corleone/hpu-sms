@@ -1,0 +1,75 @@
+server:
+  port: 80
+  servlet:
+    context-path: /hpu/sms/ # 路径访问
+
+spring:
+  application:
+    name: hpu-sms # 服务名
+  # 配置druid数据源
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/sms
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 1234
+    druid:
+      validation-query: select 1 from dual
+      query-timeout: 100
+      filter:
+        log4j:
+          enabled: true
+
+  # 配置redis
+  redis:
+   host: 127.0.0.1
+   port: 6379
+   database: 0
+   jedis:
+    pool:
+      max-active: 10
+      max-idle: 5
+      min-idle: 3
+      max-wait: 2ms
+
+# 配置mybatis-plus
+mybatis-plus:
+  # 配置别名
+  type-aliases-package: org.sms.domain
+  # 没有所以不check
+  check-config-location: false
+  # xml配置文件路径
+  mapper-locations: classpath*:mapper/**/*.xml
+  # 类型处理器包
+  type-handlers-package: org.sms.handler
+
+  configuration:
+    # 一级缓存 false
+    aggressive-lazy-loading: false
+    # 二级缓存 true
+    cache-enabled: true
+    # 日志打印
+    log-impl: org.apache.ibatis.logging.log4j.Log4jImpl
+    # 懒加载
+    lazy-loading-enabled: true
+    # xx
+    jdbc-type-for-null: null
+    # 字段驼峰映射
+    map-underscore-to-camel-case: true
+    # 主键生成
+    use-generated-keys: true
+
+  global-config:
+    # 打印 banner
+    banner: true
+    db-config:
+      # 主键自增长
+      id-type: auto
+      # 逻辑删除字段
+      logic-delete-field: isDeleted
+      # 逻辑删除 1
+      logic-delete-value: -1
+      # 逻辑未删除 -1
+      logic-not-delete-value: 1
+
+
+

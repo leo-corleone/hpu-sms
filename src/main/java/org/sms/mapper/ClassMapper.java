@@ -1,0 +1,1 @@
+package org.sms.mapper;public interface ClassMapper {}

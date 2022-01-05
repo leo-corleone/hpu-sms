@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="org.sms.mapper.DepartmentMapper">
+ 
+   
+    <select id="queryDepartmentAllInfor" resultType="Department">
+            select * from department 
+    </select>
+ 
+    
+    <select id="queryDepartmentByName" parameterType="String" resultType="Department">
+            select * from department where name = #{name}
+    </select>
+ 
+    <select id="queryALLDepartmentName" resultType="HashMap">
+            select  name from department 
+    </select>
+    
+    <select id="queryDepartmentNameWithCourse" resultType="HashMap">
+            select  name from department where name in (select department from course)
+    </select>
+ 
+</mapper>
