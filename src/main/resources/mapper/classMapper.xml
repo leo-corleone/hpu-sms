@@ -3,7 +3,7 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
-<mapper namespace="org.sms.mapper.ClassMapper">
+<mapper namespace="com.sms.mapper.ClassMapper">
    
    
    <select id="queryOneClassById" parameterType="Integer" resultMap="Class_resultMap">
@@ -47,7 +47,7 @@
    </select>
    
    <resultMap type="Clazz" id="Class_resultMap">
-      <association property="tutor" column="tutor" javaType="String" jdbcType="INTEGER"  select="org.sms.mapper.TeacherMapper.queryNameOfTeacherById">
+      <association property="tutor" column="tutor" javaType="String" jdbcType="INTEGER"  select="com.sms.mapper.TeacherMapper.queryNameOfTeacherById">
       </association>
    </resultMap>
  

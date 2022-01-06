@@ -3,7 +3,7 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
- <mapper namespace="org.sms.mapper.ScheduleMapper">
+ <mapper namespace="com.sms.mapper.ScheduleMapper">
       
       <select id="queryALLSchedule">
            select * from schedule
@@ -35,8 +35,8 @@
       
       <resultMap type="Schedule" id="schedule_resultmap_class">
           <result property="clazz" column="class"/>
-          <association property="tutor" javaType="String"  column="tutor" jdbcType="INTEGER"  select="org.sms.mapper.TeacherMapper.queryNameOfTeacherById" />
-          <association property="lessonid" javaType="String" column="lessonid" jdbcType="VARCHAR" select="org.sms.mapper.CourseMapper.queryCoursename"></association>
+          <association property="tutor" javaType="String"  column="tutor" jdbcType="INTEGER"  select="com.sms.mapper.TeacherMapper.queryNameOfTeacherById" />
+          <association property="lessonid" javaType="String" column="lessonid" jdbcType="VARCHAR" select="com.sms.mapper.CourseMapper.queryCoursename"></association>
       </resultMap>
       
       

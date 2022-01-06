@@ -1,2 +1,9 @@
-## HUP-SMS    -- 2022/1/5
-  这次项目是关于毕业设计的
+## HUP-SMS 教务管理系统
+
+### ABOUT technology
+
+
+
+data in 2022/1/5
+
+by **swiChen**

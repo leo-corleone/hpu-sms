@@ -3,7 +3,7 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
- <mapper namespace="org.sms.mapper.NoticeMapper">
+ <mapper namespace="com.sms.mapper.NoticeMapper">
       
       <select id="queryALLNotice"  resultMap="notice_resultmap">
            select * from notice where state = 'active'

@@ -3,7 +3,7 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
-<mapper namespace="org.sms.mapper.StudentMapper">
+<mapper namespace="com.sms.mapper.StudentMapper">
  
     <!-- 基本信息查询 -->
     <select id="queryOneStudentBasicInforById" parameterType="Integer" resultMap="Student_resultMap">
@@ -22,7 +22,7 @@
     
     <resultMap type="Student" id="StudentALLInfor_resultMap">  
        <result property="birthday" column="birthday" javaType="Date" jdbcType="DATE"/>
-       <association property="clacc" column="class" javaType="Clazz" jdbcType="VARCHAR"  select="org.sms.mapper.ClassMapper.queryOneClassByName">
+       <association property="clacc" column="class" javaType="Clazz" jdbcType="VARCHAR"  select="com.sms.mapper.ClassMapper.queryOneClassByName">
        </association> 
     </resultMap>
           
@@ -64,7 +64,7 @@
        <result property="address" column="address"/>
        <result property="clazz" column="class"/>
        <result property="remark" column="remark"/>
-       <association property="clacc" column="class" javaType="Clazz" jdbcType="VARCHAR"  select="org.sms.mapper.ClassMapper.queryOneClassByName">
+       <association property="clacc" column="class" javaType="Clazz" jdbcType="VARCHAR"  select="com.sms.mapper.ClassMapper.queryOneClassByName">
        </association>
     </resultMap>
  

@@ -1,17 +1,31 @@
-project:
-  host: 192.168.18.130 # linux服务器
+hpu-sms:
+  # 项目名
+  project-name: hpu-sms
+  # 作者
+  author: swiChen
+  # 部署环境的ip
+  host: 192.168.18.130
+  # 项目版本
+  version: 1.0.0
 
 server:
-  port: 80
+  port: 9000 # 项目端口
   servlet:
     context-path: /hpu/sms/ # 路径访问
 
 spring:
+
   application:
     name: hpu-sms # 服务名
+
+  # banner
+  banner:
+    charset: UTF-8
+    location: banner.txt
+
   # 配置druid数据源
   datasource:
-    url: jdbc:mysql://${project.host}:3306/hpu-sms
+    url: jdbc:mysql://${hpu-sms.host}:3306/hpu-sms
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 1234
@@ -24,7 +38,7 @@ spring:
 
   # 配置redis
   redis:
-   host: ${project.host}
+   host: ${hpu-sms.host}
    port: 6379
    database: 0
    jedis:
@@ -34,16 +48,19 @@ spring:
       min-idle: 3
       max-wait: 2ms
 
+
 # 配置mybatis-plus
 mybatis-plus:
+  # 扫描包
+  mapperpackage: com.sms.mapper
   # 配置别名
-  type-aliases-package: org.sms.domain
+  type-aliases-package: com.sms.domain
   # 没有所以不check
   check-config-location: false
   # xml配置文件路径
-  mapper-locations: classpath*:mapper/**/*.xml
+  mapper-locations: classpath*:/mapper/**/*.xml
   # 类型处理器包
-  type-handlers-package: org.sms.handler
+  type-handlers-package: com.sms.handler
 
   configuration:
     # 一级缓存 false

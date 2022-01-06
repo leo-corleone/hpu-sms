@@ -1,0 +1,1 @@
+package com.sms.service.impl;import com.sms.service.DepartmentService;import org.springframework.stereotype.Service;@Servicepublic class DepartmentServiceImpl implements DepartmentService {}

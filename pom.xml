@@ -4,6 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>2.1.6.RELEASE</version>
+    </parent>
+
     <groupId>org.swichen</groupId>
     <artifactId>hpu-sms</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -23,7 +29,7 @@
             <version>5.1.32</version>
         </dependency>
 
-        <!--   mybatisplus     -->
+        <!--   mybatis-plus     -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -90,10 +96,19 @@
             <version>5.7.18</version>
         </dependency>
 
+         <!-- 分页插件       -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
             <version>5.3.0</version>
+        </dependency>
+
+       <!--  使用@ConfigurationProperties 需要这个jar      -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>2.6.2</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 
@@ -102,4 +117,12 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
