@@ -3,30 +3,7 @@
  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
- <mapper namespace="com.sms.mapper.NoticeMapper">
+ <mapper namespace="com.tams.mapper.NoticeMapper">
       
-      <select id="queryALLNotice"  resultMap="notice_resultmap">
-           select * from notice where state = 'active'
-      </select>
-      
-      
-      <select id="queryFirstNotice" resultMap="notice_resultmap">
-           select * from notice where state = 'active' order by create_time desc limit 0,1
-      </select>
-      
-      <resultMap type="Notice" id="notice_resultmap">
-          <id column="id" property="id"/>
-          <result column="title" property="title"/>
-          <result column="content" property="content"/>
-          <result column="create_time" property="createtime" javaType="Date" jdbcType="TIMESTAMP"/>
-          <result column="state" property="state"/>
-      </resultMap>
-      
-      <update id="deleteNoticeById" parameterType="Integer">
-           update notice set state = 'inactive' where id = #{id}
-      </update>
-      
-      <insert id="addNotice" parameterType="Notice">
-           insert into notice(title,content)values(#{title},#{content})
-      </insert>
+
  </mapper>

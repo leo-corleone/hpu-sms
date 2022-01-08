@@ -1,6 +1,6 @@
-hpu-sms:
+hpu-tams:
   # 项目名
-  project-name: hpu-sms
+  project-name: hpu-tams
   # 作者
   author: swiChen
   # 部署环境的ip
@@ -11,12 +11,12 @@ hpu-sms:
 server:
   port: 9000 # 项目端口
   servlet:
-    context-path: /hpu/sms/ # 路径访问
+    context-path: /hpu/tams/ # 路径访问
+
 
 spring:
-
   application:
-    name: hpu-sms # 服务名
+    name: ${hpu-tams.project-name} # 服务名
 
   # banner
   banner:
@@ -25,7 +25,7 @@ spring:
 
   # 配置druid数据源
   datasource:
-    url: jdbc:mysql://${hpu-sms.host}:3306/hpu-sms
+    url: jdbc:mysql://${hpu-tams.host}:3306/hpu-sms
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 1234
@@ -38,7 +38,7 @@ spring:
 
   # 配置redis
   redis:
-   host: ${hpu-sms.host}
+   host: ${hpu-tams.host}
    port: 6379
    database: 0
    jedis:
@@ -52,15 +52,15 @@ spring:
 # 配置mybatis-plus
 mybatis-plus:
   # 扫描包
-  mapperpackage: com.sms.mapper
+  mapperpackage: com.tams.mapper
   # 配置别名
-  type-aliases-package: com.sms.domain
+  type-aliases-package: com.tams.domain
   # 没有所以不check
   check-config-location: false
   # xml配置文件路径
   mapper-locations: classpath*:/mapper/**/*.xml
   # 类型处理器包
-  type-handlers-package: com.sms.handler
+  type-handlers-package: com.tams.handler
 
   configuration:
     # 一级缓存 false

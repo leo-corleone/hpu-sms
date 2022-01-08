@@ -1,0 +1,1 @@
+package com.tams.service.impl;import com.tams.service.DepartmentService;import org.springframework.stereotype.Service;@Servicepublic class DepartmentServiceImpl implements DepartmentService {}
