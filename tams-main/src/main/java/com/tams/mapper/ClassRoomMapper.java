@@ -1,13 +1,10 @@
 package com.tams.mapper;
 
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tams.domain.Course;
 
 /**
  * @author swiChen
- * @date 2022/1/7
+ * @date 2022/1/12
  **/
-public interface CourseMapper extends BaseMapper<Course> {
-
+public interface ClassRoomMapper extends BaseMapper<ClassRoomMapper> {
 }

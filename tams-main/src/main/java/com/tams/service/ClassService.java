@@ -1,6 +1,9 @@
 package com.tams.service;
 
-public interface ClassService {
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.tams.domain.Clazz;
+
+public interface ClassService extends IService<Clazz> {
 
 
 	

@@ -1,7 +1,10 @@
 package com.tams.service;
 
 
-public interface DepartmentService {
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.tams.domain.Department;
+
+public interface DepartmentService extends IService<Department> {
 
 	
 }
