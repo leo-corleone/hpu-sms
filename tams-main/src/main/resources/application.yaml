@@ -4,7 +4,7 @@ hpu-tams:
   # 作者
   author: swiChen
   # 部署环境的ip
-  host: 192.168.18.130
+  host: 119.23.60.23
   # 项目版本
   version: 1.0.0
 
@@ -21,7 +21,7 @@ spring:
   # banner
   banner:
     charset: UTF-8
-    location: banner.txt
+    location: ../../../../src/main/resources/banner.txt
 
   # 配置druid数据源
   datasource:
@@ -85,7 +85,7 @@ mybatis-plus:
       # 主键自增长
       id-type: auto
       # 逻辑删除字段
-      logic-delete-field: isDeleted
+      logic-delete-field: is_deleted
       # 逻辑删除 1
       logic-delete-value: -1
       # 逻辑未删除 -1
