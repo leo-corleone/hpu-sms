@@ -1,6 +1,7 @@
 package com.tams.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.tams.domain.ClassRoom;
 import com.tams.mapper.ClassRoomMapper;
 import com.tams.service.ClassRoomService;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ClassRoomServiceImpl
-                   extends ServiceImpl<ClassRoomMapper , ClassRoomMapper>
+                   extends ServiceImpl<ClassRoomMapper , ClassRoom>
                    implements ClassRoomService {
 
 }

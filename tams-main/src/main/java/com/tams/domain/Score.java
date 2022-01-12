@@ -1,5 +1,6 @@
 package com.tams.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -16,6 +17,9 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @TableName("score")
 public class Score implements Serializable {
+
+    @TableId
+    private Long sNo;
 
     private Long sId;
 
