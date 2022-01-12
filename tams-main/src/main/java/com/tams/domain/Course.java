@@ -1,6 +1,6 @@
 package com.tams.domain;
 
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -17,7 +17,7 @@ import java.io.Serializable;
 @TableName("course")
 public class Course implements Serializable{
 
-    @TableLogic
+    @TableId
     private Long cNo;
 
     private String name;
