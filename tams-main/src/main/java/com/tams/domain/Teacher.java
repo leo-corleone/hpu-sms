@@ -1,5 +1,7 @@
 package com.tams.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -16,6 +18,23 @@ import java.io.Serializable;
 @TableName("teacher")
 public class Teacher implements Serializable{
 
+    @TableId
+    private Long tId;
+
+    private String name;
+
+    private Integer age;
+
+    private String gender;
+
+    private String image;
+
+    private Long dId;
+
+    private String pwd;
+
+    @TableLogic
+    private int isDelete;
 
 	
 }

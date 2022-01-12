@@ -1,29 +1,49 @@
 package com.tams.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.tams.enums.ScheduleWeekEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-
-/**
- * 
- * @author ��
- * @data 2021-5-12
- * 
- */
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author swiChen
- * @date 2022/1/5
+ * @date 2022/1/12
  **/
 
 @Data
 @Accessors(chain = true)
 @TableName("schedule")
-public class Schedule implements Serializable{
+public class Schedule implements Serializable {
 
+    @TableId
+    private Long scId;
 
-	
-	
+    private Long cNo;
+
+    private Long tId;
+
+    private Long cId;
+
+    private Long roomId;
+
+    private ScheduleWeekEnum week;
+
+    private Integer order;
+
+    private Date start;
+
+    private Integer period ;
+
+    private LocalDateTime createTime;
+
+    private Long createBy;
+
+    @TableLogic
+    private Integer isDelete;
 }

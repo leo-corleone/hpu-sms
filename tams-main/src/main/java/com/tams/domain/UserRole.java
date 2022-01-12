@@ -1,6 +1,5 @@
 package com.tams.domain;
 
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -8,28 +7,30 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author swiChen
- * @date 2022/1/5
+ * @date 2022/1/12
  **/
 
 @Data
+@TableName("user_role")
 @Accessors(chain = true)
-@TableName("class")
-public class Clazz implements Serializable {
+public class UserRole implements Serializable {
 
     @TableId
-    private Long cId;
+    private Long rId;
 
-    private String className;
+    private Long uId;
 
-    private Long tId;
+    private Date createTime;
 
-    private Long dId;
+    private Long createBy;
 
-    private int total;
+    private String state;
 
     @TableLogic
-    private Integer isDelete;
+    private String isDelete;
+
 }
