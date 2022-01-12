@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @TableName("score")
 public class Score implements Serializable {
 
-    @TableId
+     @TableId
     private Long sNo;
 
     private Long sId;
