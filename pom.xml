@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>tams-main</module>
-        <module>tams-nats</module>
+        <module>main-service</module>
+        <module>nats-service</module>
+        <module>minio-service</module>
     </modules>
 
     <parent>

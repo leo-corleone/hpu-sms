@@ -30,7 +30,7 @@ public class Student implements Serializable{
 
     private String tel;
 
-    private String image;
+    private Long iId;
 
     private Date birthday;
 

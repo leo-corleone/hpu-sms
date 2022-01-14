@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum ResponseCode {
 
-    OK(200 , "请求成功"),
+    OK(200 , "ok"),
 
     ERROR(500 , "error");
 

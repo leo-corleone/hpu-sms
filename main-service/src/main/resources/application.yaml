@@ -25,16 +25,23 @@ spring:
 
   # 配置druid数据源
   datasource:
-    url: jdbc:mysql://${hpu-tams.host}:3306/hpu-sms
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://${hpu-tams.host}:3306/hpu_tams
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 1234
+    platform: mysql
     druid:
-      validation-query: select 1 from dual
-      query-timeout: 100
+      async-init: true
+      query-timeout: 10
+      initial-size: 10
+      max-active: 20
+      max-wait-thread-count: 5
+      min-idle: 5
+      validation-query: select 1 from dual;
       filter:
         log4j:
-          enabled: true
+          enabled: false
 
   # 配置redis
   redis:

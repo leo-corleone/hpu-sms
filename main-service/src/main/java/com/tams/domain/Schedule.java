@@ -7,6 +7,8 @@ import com.tams.enums.ScheduleWeekEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -32,6 +34,7 @@ public class Schedule implements Serializable {
 
     private Long roomId;
 
+    @Enumerated(EnumType.STRING)
     private ScheduleWeekEnum week;
 
     private Integer order;

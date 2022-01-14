@@ -7,6 +7,8 @@ import com.tams.enums.NoticeVisitEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -34,6 +36,7 @@ public class Notice implements Serializable{
     @TableLogic
     private Integer isDelete;
 
+    @Enumerated(EnumType.STRING)
     private NoticeVisitEnum visit;
 
 }

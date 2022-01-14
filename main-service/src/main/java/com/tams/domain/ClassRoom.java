@@ -6,6 +6,8 @@ import com.tams.enums.ClassRoomTypeEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 
 /**
@@ -23,6 +25,7 @@ public class ClassRoom implements Serializable {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private ClassRoomTypeEnum type;
 
     private Integer capacity;

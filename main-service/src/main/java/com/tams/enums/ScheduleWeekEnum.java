@@ -21,7 +21,4 @@ public enum ScheduleWeekEnum {
     SUN,
 
 
-
-
-
 }

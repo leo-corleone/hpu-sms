@@ -27,7 +27,7 @@ public class Teacher implements Serializable{
 
     private String gender;
 
-    private String image;
+    private Long iId;
 
     private Long dId;
 
