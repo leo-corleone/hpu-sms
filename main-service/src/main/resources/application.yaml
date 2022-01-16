@@ -55,6 +55,15 @@ spring:
       min-idle: 3
       max-wait: 2ms
 
+  #配置nats
+  nats:
+    host: ${hpu-tams.host}
+    port: 4222
+    connection-timeout: 10
+    max-reconnects: 10
+    ping-interval: 5
+    reconnect-wait: 20
+
 
 # 配置mybatis-plus
 mybatis-plus:
@@ -97,6 +106,5 @@ mybatis-plus:
       logic-delete-value: -1
       # 逻辑未删除 -1
       logic-not-delete-value: 1
-
 
 

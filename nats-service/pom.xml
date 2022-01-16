@@ -11,12 +11,21 @@
 
     <artifactId>nats-service</artifactId>
 
+
     <dependencies>
         <dependency>
             <groupId>io.nats</groupId>
             <artifactId>jnats</artifactId>
             <version>2.13.1</version>
         </dependency>
+
+        <!--  工具类      -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.79</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -29,9 +38,17 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+
+
     </dependencies>
 
     <properties>
@@ -39,12 +56,5 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>

@@ -1,7 +1,6 @@
 package com.nats.tams.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author swiChen
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
  **/
 
 
-@Configuration
 @ConfigurationProperties(prefix = NatsProperties.NATS_SERVICE)
 public class NatsProperties {
 
@@ -21,7 +19,67 @@ public class NatsProperties {
 
     private String url;
 
-    private Integer reconnectTime;
+    private Long reconnectWait;
 
+    private Integer connectionTimeout;
 
+    private Integer maxReconnects;
+
+    private Integer pingInterval;
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Long getReconnectWait() {
+        return reconnectWait;
+    }
+
+    public void setReconnectWait(Long reconnectWait) {
+        this.reconnectWait = reconnectWait;
+    }
+
+    public Integer getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(Integer connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public Integer getMaxReconnects() {
+        return maxReconnects;
+    }
+
+    public void setMaxReconnects(Integer maxReconnects) {
+        this.maxReconnects = maxReconnects;
+    }
+
+    public Integer getPingInterval() {
+        return pingInterval;
+    }
+
+    public void setPingInterval(Integer pingInterval) {
+        this.pingInterval = pingInterval;
+    }
 }

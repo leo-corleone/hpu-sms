@@ -25,6 +25,8 @@ public class Image {
 
     private String type;
 
+    private Integer size;
+
     private String bucketName;
 
     @TableLogic
