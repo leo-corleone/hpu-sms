@@ -7,20 +7,13 @@ package com.nats.tams.exception;
 
 public class NatsException extends RuntimeException{
 
-    private String msg;
-
     public NatsException(String msg){
         super(msg);
     }
 
     public NatsException() {
+        super("");
     }
 
-    public String getMsg() {
-        return msg;
-    }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }
