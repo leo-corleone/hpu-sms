@@ -1,6 +1,5 @@
 package com.tams.nats;
 
-import com.nats.tams.annotation.NatsListener;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,14 +10,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class NatsService {
 
-   @NatsListener(subject = "report.io" , log = true)
-   public void report(){
 
-   }
-
-   @NatsListener(subject = "report.io.report1" , log = true)
-   public void report1(){
-
-   }
 
 }

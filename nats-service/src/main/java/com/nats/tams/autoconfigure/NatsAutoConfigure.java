@@ -29,9 +29,9 @@ import java.nio.charset.StandardCharsets;
 @EnableConfigurationProperties(NatsProperties.class)
 public class NatsAutoConfigure {
 
-    private NatsProperties properties;
+    private final NatsProperties properties;
 
-    private ApplicationContext context;
+    private final ApplicationContext context;
 
     public NatsAutoConfigure(NatsProperties properties , ApplicationContext context ) {
         this.properties = properties;
@@ -65,15 +65,20 @@ public class NatsAutoConfigure {
     }
 
     public void init(NatsTemplate natsTemplate) {
-        new Thread(()->{
-//            while (natsTemplate == null){}
+
+      new Thread(()->{
+            if (properties.getGlobalLog()){
+                log.info("nats start subscribe subject");
+            }
             String[] beanNames = context.getBeanDefinitionNames();
             for (String beanName : beanNames) {
                 Object object = context.getBean(beanName);
                 init(natsTemplate ,  object);
             }
-            log.info("nats all subject subscribed.....");
-        }).start();
+            if (properties.getGlobalLog()){
+                log.info("nats end subscribe subject");
+            }
+        },"nats-thread").start();
     }
 
 
@@ -92,7 +97,7 @@ public class NatsAutoConfigure {
                         Object object = JSONObject.parseObject(value, parameterType);
                         method.invoke(bean , object);
                     }else {
-                        method.invoke(bean , null);
+                        method.invoke(bean , (Object) null);
                     }
                     if (annotation.log()){
                        log.info("nats 订阅 {} 执行成功 ----- " , method.getName() );
@@ -105,8 +110,8 @@ public class NatsAutoConfigure {
             String subject = annotation.subject();
             String queue = annotation.queue();
             natsTemplate.subscribe(subject,queue, handler);
-            if (annotation.log()){
-                log.info("subscribe-info --> method: {} subject: {}  queue: {}" , method.getName() ,annotation.subject() ,annotation.queue() );
+            if (properties.getGlobalLog()){
+                log.info("[ method-name:{} , subject:{} , queue:{} ] finishing subscribe", method.getName() , subject , queue.equals("") ? null : queue);
             }
         }
 

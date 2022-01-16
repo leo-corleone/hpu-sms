@@ -27,6 +27,9 @@ public class NatsProperties {
 
     private Integer pingInterval;
 
+
+    private Boolean globalLog = false;
+
     public Integer getPort() {
         return port;
     }
@@ -81,5 +84,13 @@ public class NatsProperties {
 
     public void setPingInterval(Integer pingInterval) {
         this.pingInterval = pingInterval;
+    }
+
+    public Boolean getGlobalLog() {
+        return globalLog;
+    }
+
+    public void setGlobalLog(Boolean globalLog) {
+        this.globalLog = globalLog;
     }
 }

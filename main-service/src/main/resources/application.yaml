@@ -57,18 +57,26 @@ spring:
 
   #配置nats
   nats:
+    # nats ip
     host: ${hpu-tams.host}
+    # nats port
     port: 4222
+    # 连接超时
     connection-timeout: 10
+    # 最大重连数
     max-reconnects: 10
+    # ping间隔时间
     ping-interval: 5
+    # 重连等待时间
     reconnect-wait: 20
+    # 全局 log
+    global-log: true
 
 
 # 配置mybatis-plus
 mybatis-plus:
   # 扫描包
-  mapperpackage: com.tams.mapper
+#  mapperpackage: com.tams.mapper
   # 配置别名
   type-aliases-package: com.tams.domain
   # 没有所以不check
