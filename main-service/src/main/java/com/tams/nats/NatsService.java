@@ -1,5 +1,6 @@
 package com.tams.nats;
 
+import com.nats.tams.annotation.NatsListener;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,5 +12,9 @@ import org.springframework.stereotype.Service;
 public class NatsService {
 
 
+    @NatsListener(subject = "report.*.hpu.tams.v1.call.notice.id")
+    public void report(Object object){
+
+    }
 
 }

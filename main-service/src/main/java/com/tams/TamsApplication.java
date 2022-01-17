@@ -11,7 +11,10 @@ public class TamsApplication {
 
     public static void main(String[] args) {
 
+        System.setProperty("pagehelper.banner" , "false");
         SpringApplication.run(TamsApplication.class , args);
+        System.out.println(" ╮(￣▽ ￣)╭ 加载完毕....");
+
     }
 
 }

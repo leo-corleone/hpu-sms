@@ -11,7 +11,7 @@ hpu-tams:
 server:
   port: 9000 # 项目端口
   servlet:
-    context-path: /hpu/tams/ # 路径访问
+    context-path: /hpu/tams/v1/ # 路径访问
 
 
 spring:
@@ -22,6 +22,8 @@ spring:
   banner:
     charset: UTF-8
     location: banner.txt
+
+
 
   # 配置druid数据源
   datasource:
@@ -76,7 +78,7 @@ spring:
 # 配置mybatis-plus
 mybatis-plus:
   # 扫描包
-#  mapperpackage: com.tams.mapper
+#  mapper-package: com.tams.mapper
   # 配置别名
   type-aliases-package: com.tams.domain
   # 没有所以不check

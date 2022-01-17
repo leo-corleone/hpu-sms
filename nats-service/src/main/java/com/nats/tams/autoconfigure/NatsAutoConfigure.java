@@ -2,9 +2,9 @@ package com.nats.tams.autoconfigure;
 
 import com.alibaba.fastjson.JSONObject;
 import com.nats.tams.annotation.NatsListener;
+import com.nats.tams.core.NatsClient;
 import com.nats.tams.exception.NatsException;
 import com.nats.tams.properties.NatsProperties;
-import com.nats.tams.core.NatsClient;
 import io.nats.client.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -18,6 +18,9 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author swiChen
@@ -84,23 +87,23 @@ public class NatsAutoConfigure {
 
     private void init(NatsClient natsClient , Object bean){
 
-        Method[] methods = ReflectionUtils.getAllDeclaredMethods(bean.getClass());
+        List<Method> methods = Arrays.stream(ReflectionUtils.getAllDeclaredMethods(bean.getClass()))
+                                            .filter(method ->
+                                               method.isAnnotationPresent(NatsListener.class)
+                                            ).collect(Collectors.toList());
+        if (methods.isEmpty()){return;}
         for (Method method : methods) {
-            if (!method.isAnnotationPresent(NatsListener.class)){continue;}
-            NatsListener annotation = method.getAnnotation(NatsListener.class);
 
+            NatsListener annotation = method.getAnnotation(NatsListener.class);
+            Class<?> parameterType = method.getParameterTypes()[0];
             MessageHandler handler = (msg)->{
                 try {
-                    if (method.getParameterTypes().length != 0){
-                        Class<?> parameterType = method.getParameterTypes()[0];
-                        String value = new String(msg.getData(), StandardCharsets.UTF_8);
-                        Object object = JSONObject.parseObject(value, parameterType);
-                        method.invoke(bean , object);
-                    }else {
-                        method.invoke(bean , (Object) null);
-                    }
+                    String value = new String(msg.getData(), StandardCharsets.UTF_8);
+                    Object object = JSONObject.parseObject(value, parameterType);
+                    method.setAccessible(true);
+                    method.invoke(bean , object);
                     if (annotation.log()){
-                       log.info("nats 订阅 {} 执行成功 ----- " , method.getName() );
+                       log.info("nats 订阅 {} 执行成功 ----- status [ message:{} , code: {} ]" , method.getName() , msg.getStatus().getMessage() , msg.getStatus().getCode());
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new NatsException(e.getMessage());
