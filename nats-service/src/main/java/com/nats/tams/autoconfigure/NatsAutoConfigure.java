@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.nats.tams.annotation.NatsListener;
 import com.nats.tams.exception.NatsException;
 import com.nats.tams.properties.NatsProperties;
-import com.nats.tams.service.NatsTemplate;
+import com.nats.tams.core.NatsClient;
 import io.nats.client.MessageHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
  * @date 2022/1/14
  **/
 @Slf4j
-@ConditionalOnClass(NatsTemplate.class)
+@ConditionalOnClass(NatsClient.class)
 @Configuration
 @EnableConfigurationProperties(NatsProperties.class)
 public class NatsAutoConfigure {
@@ -38,13 +38,13 @@ public class NatsAutoConfigure {
         this.context = context;
     }
 
-    @Bean
-    public NatsTemplate natsTemplate(){
+    @Bean(initMethod = "init" , destroyMethod = "destroy")
+    public NatsClient natsClient(){
 
         if (StringUtils.hasText(properties.getHost()) && properties.getPort() != null){
             String url = "nats://%s:%s";
             url = String.format(url, properties.getHost() , properties.getPort());
-            NatsTemplate  natsTemplate = new NatsTemplate(url
+            NatsClient natsTemplate = new NatsClient(url
                     , properties.getReconnectWait()
                     , properties.getConnectionTimeout()
                     , properties.getMaxReconnects()
@@ -53,7 +53,7 @@ public class NatsAutoConfigure {
             return natsTemplate;
         }
         if (StringUtils.hasText(properties.getUrl())){
-            NatsTemplate  natsTemplate = new NatsTemplate(properties.getUrl()
+            NatsClient natsTemplate = new NatsClient(properties.getUrl()
                     , properties.getReconnectWait()
                     , properties.getConnectionTimeout()
                     , properties.getMaxReconnects()
@@ -64,7 +64,7 @@ public class NatsAutoConfigure {
         return null;
     }
 
-    public void init(NatsTemplate natsTemplate) {
+    public void init(NatsClient natsClient) {
 
       new Thread(()->{
             if (properties.getGlobalLog()){
@@ -73,16 +73,16 @@ public class NatsAutoConfigure {
             String[] beanNames = context.getBeanDefinitionNames();
             for (String beanName : beanNames) {
                 Object object = context.getBean(beanName);
-                init(natsTemplate ,  object);
+                init(natsClient ,  object);
             }
             if (properties.getGlobalLog()){
                 log.info("nats end subscribe subject");
             }
-        },"nats-thread").start();
+        },"nats-subscribe").start();
     }
 
 
-    private void init(NatsTemplate natsTemplate , Object bean){
+    private void init(NatsClient natsClient , Object bean){
 
         Method[] methods = ReflectionUtils.getAllDeclaredMethods(bean.getClass());
         for (Method method : methods) {
@@ -109,7 +109,7 @@ public class NatsAutoConfigure {
 
             String subject = annotation.subject();
             String queue = annotation.queue();
-            natsTemplate.subscribe(subject,queue, handler);
+            natsClient.subscribe(subject,queue, handler);
             if (properties.getGlobalLog()){
                 log.info("[ method-name:{} , subject:{} , queue:{} ] finishing subscribe", method.getName() , subject , queue.equals("") ? null : queue);
             }

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
+
 /**
  * @author swiChen
  * @date 2022/1/14
@@ -28,6 +30,8 @@ public class Image {
     private Integer size;
 
     private String bucketName;
+
+    private LocalDateTime uploadTime;
 
     @TableLogic
     private Integer isDelete;
