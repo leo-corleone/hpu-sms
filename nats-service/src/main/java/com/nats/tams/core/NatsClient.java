@@ -19,6 +19,8 @@ public class NatsClient {
     private final Connection nc;
 
     private  Dispatcher dispatcher;
+    
+    private Options options;
 
     private Boolean isClosed = false;
 
@@ -43,9 +45,9 @@ public class NatsClient {
             natsBuilder.pingInterval(Duration.ofSeconds(pingInterval));
         }
 
-        Options options = natsBuilder.build();
+            this.options = natsBuilder.build();
         try {
-            this.nc = Nats.connect(options);
+            this.nc = Nats.connect(this.options);
         } catch (Exception e) {
             log.error("nats connection error");
             throw new NatsException(e.getMessage());
@@ -91,10 +93,17 @@ public class NatsClient {
 
     private void checkDispatcher() {
         if (ObjectUtils.isEmpty(this.dispatcher)) {
+            checkConnection();
             this.dispatcher = this.nc.createDispatcher();
         }
     }
 
+    private void checkConnection(){
+       if(ObjectUtils.isEmpty(this.nc)){
+           this.nc = Nats.connect(this.options);
+           this.isClosed = false;
+       }
+    }
 
     public void init() {
         this.dispatcher = this.nc.createDispatcher();
