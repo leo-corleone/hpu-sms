@@ -24,6 +24,6 @@ public class StudentModel extends Student {
      */
     private String state;
 
-
+    private String grade;
 
 }

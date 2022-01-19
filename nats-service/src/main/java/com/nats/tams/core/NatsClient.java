@@ -21,7 +21,7 @@ public class NatsClient {
 
     private  Dispatcher dispatcher;
     
-    private Options options;
+    private final Options options;
 
     private Boolean isClosed = false;
 

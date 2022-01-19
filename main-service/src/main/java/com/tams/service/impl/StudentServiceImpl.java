@@ -1,18 +1,43 @@
 package com.tams.service.impl;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tams.domain.Student;
 import com.tams.mapper.StudentMapper;
+import com.tams.model.StudentModel;
+import com.tams.service.ImageService;
 import com.tams.service.StudentService;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
                             implements StudentService {
 
+    @Resource
+    private StudentMapper studentMapper;
 
+    @Resource
+    private ImageService imageService;
 
+    @Override
+    public StudentModel getById(Long sId) {
 
+        StudentModel studentModel = studentMapper.getStudentById(sId);
+        if (ObjectUtil.isEmpty(studentModel)){
+            return null;
+        }
+        String imagePath = imageService.getImagePath(studentModel.getIId());
+        studentModel.setImagePath(imagePath);
+        return studentModel;
+    }
+
+    @Override
+    public List<StudentModel> getStudents() {
+        return null;
+    }
 }
