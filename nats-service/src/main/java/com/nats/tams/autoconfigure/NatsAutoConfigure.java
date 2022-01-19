@@ -91,7 +91,6 @@ public class NatsAutoConfigure {
                                             .filter(method ->
                                                method.isAnnotationPresent(NatsListener.class)
                                             ).collect(Collectors.toList());
-        if (methods.isEmpty()){return;}
         for (Method method : methods) {
 
             NatsListener annotation = method.getAnnotation(NatsListener.class);

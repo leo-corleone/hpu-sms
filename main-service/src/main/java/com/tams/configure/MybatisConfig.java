@@ -29,6 +29,7 @@ public class MybatisConfig {
         return  mybatisPlusInterceptor;
     }
 
+
     @Bean
     public PageInterceptor pageInterceptor(){
         return new PageInterceptor();

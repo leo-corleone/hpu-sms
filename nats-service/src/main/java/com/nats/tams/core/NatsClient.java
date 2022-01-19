@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.time.Duration;
 
 /**
@@ -16,7 +17,7 @@ import java.time.Duration;
 @Slf4j
 public class NatsClient {
 
-    private final Connection nc;
+    private Connection nc;
 
     private  Dispatcher dispatcher;
     
@@ -91,7 +92,7 @@ public class NatsClient {
         nc.publish(subject, data);
     }
 
-    private void checkDispatcher() {
+    private  void checkDispatcher() {
         if (ObjectUtils.isEmpty(this.dispatcher)) {
             checkConnection();
             this.dispatcher = this.nc.createDispatcher();
@@ -100,23 +101,24 @@ public class NatsClient {
 
     private void checkConnection(){
        if(ObjectUtils.isEmpty(this.nc)){
-           this.nc = Nats.connect(this.options);
+           try {
+               this.nc = Nats.connect(this.options);
+           } catch (IOException | InterruptedException e) {
+               throw new NatsException("nats 连接异常");
+           }
            this.isClosed = false;
        }
     }
 
-    public void init() {
+    private void init() {
         this.dispatcher = this.nc.createDispatcher();
         log.info("nats init dispatcher");
     }
 
-
-    public void destroy() {
-
+    private void destroy() {
         if (isClosed) {
             return;
         }
-
         if (this.dispatcher != null) {
             this.dispatcher = null;
         }
@@ -132,7 +134,6 @@ public class NatsClient {
                 throw new NatsException(e.getMessage());
             }
         }
-
     }
 }
 
