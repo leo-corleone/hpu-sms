@@ -8,6 +8,7 @@ import com.tams.mapper.StudentMapper;
 import com.tams.model.StudentModel;
 import com.tams.service.ImageService;
 import com.tams.service.StudentService;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +25,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     @Resource
     private ImageService imageService;
 
+    @Resource
+    private StringRedisTemplate redisTemplate;
+
     @Override
     public StudentModel getById(Long sId) {
 
@@ -38,6 +42,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
 
     @Override
     public List<StudentModel> getStudents() {
+
         return null;
     }
 }
