@@ -4,8 +4,8 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tams.domain.Image;
 import com.tams.mapper.ImageMapper;
+import com.tams.minio.MinioService;
 import com.tams.service.ImageService;
-import io.minio.MinioClient;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 public class ImageServiceImpl extends ServiceImpl<ImageMapper , Image> implements ImageService {
 
     @Resource
-    private MinioClient minioClient;
+    private MinioService minioService;
 
 
     @Override
