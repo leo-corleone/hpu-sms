@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tams.domain.Image;
 import com.tams.mapper.ImageMapper;
 import com.tams.service.ImageService;
+import io.minio.MinioClient;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * @author swiChen
@@ -13,6 +16,9 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class ImageServiceImpl extends ServiceImpl<ImageMapper , Image> implements ImageService {
+
+    @Resource
+    private MinioClient minioClient;
 
 
     @Override
