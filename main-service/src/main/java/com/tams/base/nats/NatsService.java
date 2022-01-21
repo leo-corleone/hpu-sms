@@ -1,4 +1,4 @@
-package com.tams.nats;
+package com.tams.base.nats;
 
 import com.nats.tams.annotation.NatsListener;
 import org.springframework.stereotype.Service;

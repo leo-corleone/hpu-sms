@@ -1,4 +1,4 @@
-package com.tams.minio;
+package com.tams.base.minio;
 
 import io.minio.MinioClient;
 import org.springframework.stereotype.Service;

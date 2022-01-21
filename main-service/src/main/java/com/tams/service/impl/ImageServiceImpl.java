@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tams.domain.Image;
 import com.tams.mapper.ImageMapper;
-import com.tams.minio.MinioService;
+import com.tams.base.minio.MinioService;
 import com.tams.service.ImageService;
 import org.springframework.stereotype.Service;
 
