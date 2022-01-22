@@ -47,7 +47,7 @@ public class SysLoginService {
        if (ObjectUtil.isEmpty(login)){
           throw new BusinessException("登录信息为空" , 500);
        }
-       String token;
+       String token = null;
        if (login.getRole() == RoleEnum.STUDENT){
           Student student = studentService.lambdaQuery()
                            .eq(Student::getSId , new Long(login.getUsername()))
@@ -55,30 +55,39 @@ public class SysLoginService {
           if (ObjectUtil.isEmpty(student)){
              throw new BusinessException("用户不存在", 501);
           }
-          token = jwtService.createToken(login);
-          if (redisService.exists(RedisConstant.TOKEN_STUDENT_PREFIX+student.getSId())){
-              log.info("用户: {} 被覆盖登陆" , student.getSId());
-              //  发送nats通知  账号已在别处登陆
-//              natsClient.publish("",""); //TODO
-          }
-          redisService.set(RedisConstant.TOKEN_STUDENT_PREFIX+student.getSId() , token , TimeUnit.MINUTES , RedisConstant.TOKEN_RESTORE_TIME);
-       }
-      else  {
+          token = loginHandle(RedisConstant.TOKEN_STUDENT_PREFIX+student.getSId() , login);
+      }
+      else {
          Teacher teacher = teacherService.lambdaQuery()
               .eq(Teacher::getTId , new Long(login.getUsername()))
               .eq(Teacher::getPwd , login.getPassword()).one();
           if (ObjectUtil.isEmpty(teacher)){
              throw new BusinessException("用户不存在", 501);
           }
-           if (redisService.exists(RedisConstant.TOKEN_TEACHER_PREFIX+teacher.getTId())){
-               log.info("用户: {} 被覆盖登陆" , teacher.getTId());
-               //  发送nats通知  账号已在别处登陆
-//               natsClient.publish("",""); //TODO
-           }
-          token = jwtService.createToken(login);
-          redisService.set(RedisConstant.TOKEN_TEACHER_PREFIX+teacher.getTId() , token , TimeUnit.MINUTES , RedisConstant.TOKEN_RESTORE_TIME);
-       }
+          switch (login.getRole()){
+              case TEACHER:
+                 token = loginHandle(RedisConstant.TOKEN_TEACHER_PREFIX+teacher.getTId() , login);
+              break;
+              case ROOT:
+                 token = loginHandle(RedisConstant.TOKEN_ROOT_PREFIX+teacher.getTId() , login);
+              break;
+              case ADMIN:
+                  token = loginHandle(RedisConstant.TOKEN_ADMIN_PREFIX+teacher.getTId() , login);
+              break;
+          }
+      }
       return token;
+   }
+
+   private String loginHandle(String redisK , LoginModel login){
+       if (redisService.exists(redisK)){
+           log.info("用户: {} role:{} 被覆盖登陆" , login.getUsername() , login.getRole().getRole());
+           //  发送nats通知  账号已在别处登陆
+//               natsClient.publish("",""); //TODO
+       }
+       String token = jwtService.createToken(login);
+       redisService.set(redisK , token ,TimeUnit.MINUTES , RedisConstant.TOKEN_RESTORE_TIME );
+       return token;
    }
 
 

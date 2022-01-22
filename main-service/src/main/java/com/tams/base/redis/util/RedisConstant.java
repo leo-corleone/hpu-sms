@@ -13,6 +13,8 @@ public final class RedisConstant {
 
     public static final String TOKEN_ADMIN_PREFIX = "USER:ADMIN:TOKEN:";
 
+    public static final String TOKEN_ROOT_PREFIX = "USER:ROOT:TOKEN:";
+
     public static final Long  TOKEN_RESTORE_TIME = 20l;
 
 

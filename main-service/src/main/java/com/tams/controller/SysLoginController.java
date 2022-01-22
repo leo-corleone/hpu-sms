@@ -25,7 +25,7 @@ public class SysLoginController {
     @PostMapping("/login")
     public AjaxResult<Object> login(@RequestBody LoginModel login){
 
-        Map<String , String> map = new HashMap<String , String>();
+        Map<String , String> map = new HashMap<>();
         String token = sysLoginService.login(login);
         map.put("token" , token);
         return AjaxResult.succ(map);

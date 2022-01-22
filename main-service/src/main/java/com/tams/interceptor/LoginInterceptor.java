@@ -37,14 +37,24 @@ public class LoginInterceptor implements HandlerInterceptor {
         //1.token校验
 //        jwtService.verify(token);
         //2.获取token数据
-       LoginModel loginModel = jwtService.verifyGetLoginBody(token);
+       LoginModel login = jwtService.verifyGetLoginBody(token);
         //3.判断token是否过期
-       if (loginModel.getRole() == RoleEnum.STUDENT){
-           CheckExpireToken(RedisConstant.TOKEN_STUDENT_PREFIX+loginModel.getUsername() , token);
+       if (login.getRole() == RoleEnum.STUDENT){
+           CheckExpireToken(RedisConstant.TOKEN_STUDENT_PREFIX+login.getUsername() , token);
        }else {
-           CheckExpireToken(RedisConstant.TOKEN_TEACHER_PREFIX+loginModel.getUsername() , token);
+           switch (login.getRole()){
+               case TEACHER:
+                   CheckExpireToken(RedisConstant.TOKEN_TEACHER_PREFIX+login.getUsername() , token);
+                   break;
+               case ROOT:
+                   CheckExpireToken(RedisConstant.TOKEN_ROOT_PREFIX+login.getUsername() , token);
+                   break;
+               case ADMIN:
+                   CheckExpireToken(RedisConstant.TOKEN_ADMIN_PREFIX+login.getUsername() , token);
+                   break;
+           }
        }
-       SysUserContextHandler.setSysUser(new SysUser(new Long(loginModel.getUsername()) , loginModel.getRole()));
+       SysUserContextHandler.setSysUser(new SysUser(new Long(login.getUsername()) , login.getRole()));
        return true;
     }
 
