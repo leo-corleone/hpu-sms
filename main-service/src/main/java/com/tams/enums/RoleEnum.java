@@ -11,9 +11,27 @@ import lombok.AllArgsConstructor;
 public enum RoleEnum {
 
 
-    ROOT("超级管理员"),
+    ROOT("root"),
 
-    ADMIN("管理员");
+    ADMIN("admin"),
+
+    TEACHER("teacher"),
+
+    STUDENT("student");
+
+    public static RoleEnum StringParseRole(String role){
+
+        switch (role){
+            case "student":
+                return STUDENT;
+            case "root":
+                return ROOT;
+            case "admin":
+                return ADMIN;
+            default:
+                return TEACHER;
+        }
+    }
 
     private String role;
 

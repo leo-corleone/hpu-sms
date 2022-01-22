@@ -5,7 +5,7 @@ package com.tams.base.redis.util;
  * @date 2022/1/21
  **/
 
-public final class Constant {
+public final class RedisConstant {
 
     public static final String TOKEN_STUDENT_PREFIX = "USER:STUDENT:TOKEN:";
 

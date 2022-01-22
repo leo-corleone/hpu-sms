@@ -42,6 +42,10 @@ public class RedisService {
        return redisTemplate.opsForList().range(k,start ,end);
     }
 
+    public boolean exists(String k){
+       return redisTemplate.hasKey(k);
+    }
+
 
 
 }

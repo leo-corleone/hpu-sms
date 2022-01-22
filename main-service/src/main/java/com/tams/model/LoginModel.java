@@ -1,6 +1,10 @@
 package com.tams.model;
 
+import com.tams.enums.RoleEnum;
 import lombok.Data;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 /**
  * @author swiChen
@@ -14,7 +18,8 @@ public class LoginModel {
 
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role;
 
 
 
