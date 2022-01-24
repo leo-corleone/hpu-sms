@@ -43,7 +43,7 @@ public class RedisService {
     }
 
     public boolean exists(String k){
-       return redisTemplate.hasKey(k);
+       return Boolean.TRUE.equals(redisTemplate.hasKey(k));
     }
 
 

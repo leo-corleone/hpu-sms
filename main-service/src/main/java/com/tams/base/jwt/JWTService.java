@@ -28,8 +28,8 @@ public class JWTService {
     calendar.add(Calendar.MINUTE , JWTConstant.TIME);
 
    return  JWT.create()
-               .withClaim("username", login.getUsername())
-               .withClaim("role" , login.getRole().getRole())
+               .withClaim(JWTConstant.USERNAME, login.getUsername())
+               .withClaim(JWTConstant.ROLE, login.getRole().getRole())
                .withExpiresAt(calendar.getTime())
                .sign(Algorithm.HMAC512(JWTConstant.SECRET));
 
@@ -53,8 +53,8 @@ public class JWTService {
       }
       try {
           DecodedJWT verify = JWT.require(Algorithm.HMAC512(JWTConstant.SECRET)).build().verify(token);
-          String uid = verify.getClaim("username").asString();
-          String role = verify.getClaim("role").asString();
+          String uid = verify.getClaim(JWTConstant.USERNAME).asString();
+          String role = verify.getClaim(JWTConstant.ROLE).asString();
           LoginModel loginBody = new LoginModel();
           loginBody.setUsername(uid);
           loginBody.setRole(RoleEnum.StringParseRole(role));

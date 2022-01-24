@@ -14,6 +14,7 @@ server:
     context-path: /hpu/tams/v1/ # 路径访问
 
 
+
 spring:
   application:
     name: ${hpu-tams.project-name} # 服务名
@@ -49,7 +50,7 @@ spring:
   redis:
    host: ${hpu-tams.host}
    port: 6379
-   password: '@#6673249$%'
+   password: qwert
    database: 0
    jedis:
     pool:
