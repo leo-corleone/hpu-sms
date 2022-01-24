@@ -35,12 +35,12 @@ public class JWTService {
 
   }
 
-  public void verify(String token){
+  public DecodedJWT verify(String token){
       if ("".equals(token.trim()) || ObjectUtil.isEmpty(token)){
           throw new JWTException("用户身份信息有误" , 501);
       }
       try {
-          JWT.require(Algorithm.HMAC512(JWTConstant.SECRET)).build().verify(token);
+        return  JWT.require(Algorithm.HMAC512(JWTConstant.SECRET)).build().verify(token);
       } catch (Exception e){
           throw new JWTException("身份校验失败");
       }
@@ -52,7 +52,7 @@ public class JWTService {
           throw new JWTException("用户身份信息有误, 请重新登陆" , 501);
       }
       try {
-          DecodedJWT verify = JWT.require(Algorithm.HMAC512(JWTConstant.SECRET)).build().verify(token);
+          DecodedJWT verify = verify(token);
           String uid = verify.getClaim(JWTConstant.USERNAME).asString();
           String role = verify.getClaim(JWTConstant.ROLE).asString();
           LoginModel loginBody = new LoginModel();
