@@ -22,7 +22,7 @@
         <result property="iId" column="i_id" />
     </resultMap>
 
-    <select id="getStudentById" parameterType="long" resultMap="studentByIdMap">
+    <sql id="selectStudentSql">
         select
             s.s_id s_id,
             s.`name` s_name,
@@ -43,8 +43,16 @@
                 left join teacher t on c.t_id = t.t_id
                 left join department d on c.d_id = d.d_id
                 left join image i on s.i_id = i.i_id
+    </sql>
+
+    <select id="getStudentAll" resultMap="studentByIdMap">
+        <include refid="selectStudentSql"></include>
+        where s.is_delete = 1
+    </select>
+    <select id="getStudentById" parameterType="long" resultMap="studentByIdMap">
+        <include refid="selectStudentSql"></include>
         where
-            s.s_id = ${value}
+            s.s_id = ${value} and s.is_delete = 1
     </select>
 
 </mapper>

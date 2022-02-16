@@ -7,10 +7,15 @@ import com.tams.mapper.ClassMapper;
 import com.tams.service.ClassService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ClassServiceImpl extends ServiceImpl<ClassMapper , Clazz> implements ClassService {
-	
 
 
-
+    @Override
+    public List<Clazz> getIdAndClassName() {
+        List<Clazz> list = lambdaQuery().select(Clazz::getCId, Clazz::getClassName).list();
+        return list;
+    }
 }

@@ -1,8 +1,8 @@
 package com.tams.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.nats.tams.core.NatsClient;
 import com.tams.base.jwt.JWTService;
+import com.tams.base.nats.NatsService;
 import com.tams.base.redis.RedisService;
 import com.tams.base.redis.util.RedisConstant;
 import com.tams.domain.Student;
@@ -40,7 +40,7 @@ public class SysLoginService {
    private TeacherService teacherService;
 
    @Resource
-   private NatsClient natsClient;
+   private NatsService natsService;
 
    public String login(LoginModel login){
 
@@ -83,7 +83,9 @@ public class SysLoginService {
        if (redisService.exists(redisK)){
            log.info("用户: {} role:{} 被覆盖登陆" , login.getUsername() , login.getRole().getRole());
            //  发送nats通知  账号已在别处登陆
-//               natsClient.publish("",""); //TODO
+//               natsClient.publish("","");
+           String subject = login.getRole().getRole()+"."+login.getUsername();
+           natsService.LoginNats(subject , null);
        }
        String token = jwtService.createToken(login);
        redisService.set(redisK , token ,TimeUnit.MINUTES , RedisConstant.TOKEN_RESTORE_TIME );

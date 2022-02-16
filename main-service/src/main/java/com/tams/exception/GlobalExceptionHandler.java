@@ -1,9 +1,11 @@
 package com.tams.exception;
 
 import com.nats.tams.exception.NatsException;
+import com.tams.dto.AjaxResult;
 import com.tams.exception.base.BusinessException;
 import com.tams.exception.jwt.JWTException;
-import org.springframework.stereotype.Component;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,23 +17,34 @@ import java.io.IOException;
  * @date 2022/1/18
  **/
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
-@Component
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = NatsException.class)
-    public void nastException(NatsException e, HttpServletResponse response){
+    public AjaxResult<Void> nastException(NatsException e, HttpServletResponse response){
         setError(e.getCode() , e.getMsg() , response);
-    }
-
-    @ExceptionHandler(value = BusinessException.class)
-    public void businessException(BusinessException e, HttpServletResponse response){
-        setError(e.getCode() , e.getMsg() , response);
+        return AjaxResult.error(e.getCode(),e.getMsg());
     }
 
     @ExceptionHandler(value = JWTException.class)
-    public void jwtException(JWTException e, HttpServletResponse response){
+    public AjaxResult<Void> jwtException(JWTException e, HttpServletResponse response){
+
         setError(e.getCode() , e.getMsg() , response);
+        return AjaxResult.error(e.getCode(),e.getMsg());
+    }
+
+    @ExceptionHandler(value = BusinessException.class)
+    public AjaxResult<Void> businessException(BusinessException e, HttpServletResponse response){
+        setError(e.getCode() , e.getMsg() , response);
+        return AjaxResult.error(e.getCode(),e.getMsg());
+    }
+
+
+    @ExceptionHandler(value = Exception.class)
+    public AjaxResult<Void> exception(Exception e, HttpServletResponse response){
+        setError(501 , e.getMessage() , response);
+        return AjaxResult.error(501,e.getMessage());
     }
 
     private void setError(Integer code , String msg , HttpServletResponse response){

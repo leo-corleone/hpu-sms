@@ -1,10 +1,12 @@
 package com.tams.base.redis;
 
+import com.tams.base.redis.util.RedisConstant;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,6 +32,10 @@ public class RedisService {
       return redisTemplate.opsForValue().get(k);
     }
 
+    public Set<String> getStudentIds(){
+        return redisTemplate.keys(RedisConstant.TOKEN_STUDENT_PREFIX);
+    }
+
     public void lpush(String k , String ...v){
         redisTemplate.opsForList().leftPushAll(k ,v);
     }
@@ -46,6 +52,8 @@ public class RedisService {
        return Boolean.TRUE.equals(redisTemplate.hasKey(k));
     }
 
-
+    public boolean remove(String k){
+        return Boolean.TRUE.equals(redisTemplate.delete(k));
+    }
 
 }

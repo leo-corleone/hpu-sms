@@ -29,7 +29,7 @@ spring:
   # 配置druid数据源
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://${hpu-tams.host}:3306/hpu_tams
+    url: jdbc:mysql://${hpu-tams.host}:3306/hpu_tams?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: 1234

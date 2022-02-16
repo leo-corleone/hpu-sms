@@ -36,7 +36,7 @@ public class JWTService {
   }
 
   public DecodedJWT verify(String token){
-      if ("".equals(token.trim()) || ObjectUtil.isEmpty(token)){
+      if (ObjectUtil.isEmpty(token) || "".equals(token.trim())){
           throw new JWTException("用户身份信息有误" , 501);
       }
       try {
@@ -48,9 +48,7 @@ public class JWTService {
   }
 
   public LoginModel verifyGetLoginBody(String token){
-      if (ObjectUtil.isEmpty(token) || "".equals(token.trim())){
-          throw new JWTException("用户身份信息有误, 请重新登陆" , 501);
-      }
+
       try {
           DecodedJWT verify = verify(token);
           String uid = verify.getClaim(JWTConstant.USERNAME).asString();

@@ -27,11 +27,11 @@ public class SysWebConfig implements WebMvcConfigurer {
      @Override
      public void addInterceptors(InterceptorRegistry registry) {
 
+
+          registry.addInterceptor(new ProcessInterceptor()).addPathPatterns("/**");
           registry.addInterceptor(new LoginInterceptor(redisService , jwtService))
                   .addPathPatterns("/**")
                   .excludePathPatterns("/login" ,"/error");
-
-          registry.addInterceptor(new ProcessInterceptor()).addPathPatterns("/**");
 
      }
 }
