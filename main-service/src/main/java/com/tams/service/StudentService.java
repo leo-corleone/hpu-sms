@@ -21,4 +21,6 @@ public interface StudentService extends IService<Student> {
 
     void offline(String ids[]);
 
+    void update(Student student);
+
 }

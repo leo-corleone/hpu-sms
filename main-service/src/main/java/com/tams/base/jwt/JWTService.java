@@ -8,6 +8,7 @@ import com.tams.base.jwt.util.JWTConstant;
 import com.tams.enums.RoleEnum;
 import com.tams.exception.jwt.JWTException;
 import com.tams.model.LoginModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -58,7 +59,7 @@ public class JWTService {
           loginBody.setRole(RoleEnum.StringParseRole(role));
           return loginBody;
       } catch (Exception e){
-          throw new JWTException("身份校验失败, 请重新登陆" , 501);
+          throw new JWTException("身份校验失败, 请重新登陆" , HttpStatus.UNAUTHORIZED.value());
       }
   }
 

@@ -44,6 +44,12 @@ public class StudentController {
         return AjaxResult.succ(null);
     }
 
+    @PostMapping("update")
+    public AjaxResult update(@RequestBody Student student){
+        studentService.update(student);
+        return AjaxResult.succ("ok");
+    }
+
     @GetMapping("online")
     public AjaxResult online(){
         PageResult online = studentService.online();
@@ -51,8 +57,11 @@ public class StudentController {
     }
 
     @PostMapping("offline")
-    public AjaxResult offline(String []ids){
+    public AjaxResult offline(@RequestBody String []ids){
         studentService.offline(ids);
-        return AjaxResult.succ(null);
+        return AjaxResult.succ("ok");
     }
+
+
+
 }

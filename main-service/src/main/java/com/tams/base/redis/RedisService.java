@@ -33,7 +33,7 @@ public class RedisService {
     }
 
     public Set<String> getStudentIds(){
-        return redisTemplate.keys(RedisConstant.TOKEN_STUDENT_PREFIX);
+        return redisTemplate.keys(RedisConstant.TOKEN_STUDENT_PREFIX+"*");
     }
 
     public void lpush(String k , String ...v){

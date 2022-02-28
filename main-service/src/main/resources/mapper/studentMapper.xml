@@ -20,6 +20,7 @@
         <result property="teacher" column="t_name" />
         <result property="department" column="d_depart_name" />
         <result property="iId" column="i_id" />
+        <result property="cId" column="c_id" />
     </resultMap>
 
     <sql id="selectStudentSql">
@@ -34,6 +35,7 @@
             s.time_of_enrollment s_time_of_enrollment,
             c.grade c_grade,
             c.class_name c_class_name,
+            s.c_id c_id,
             t.`name` t_name,
             d.depart_name d_depart_name,
             i.i_id

@@ -28,7 +28,9 @@ public class Clazz implements Serializable {
 
     private Long dId;
 
-    private int total;
+    private Integer total;
+
+    private Integer grade;
 
     @TableLogic
     private Integer isDelete;

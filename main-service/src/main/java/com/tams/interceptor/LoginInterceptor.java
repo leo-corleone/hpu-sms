@@ -10,6 +10,7 @@ import com.tams.exception.jwt.JWTException;
 import com.tams.model.LoginModel;
 import com.tams.model.SysUser;
 import com.tams.util.SysUserContextHandler;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,10 +71,11 @@ public class LoginInterceptor implements HandlerInterceptor {
     private void CheckExpireToken(String redisK , String token){
         String tokenInRedis = redisService.get(redisK);
         if (tokenInRedis == null || "".equals(tokenInRedis)){
-            throw new BusinessException("用户已被强制退出" , 501);
+            throw new BusinessException("用户已被强制退出" , HttpStatus.UNAUTHORIZED.value());
+
         }
         if (!token.equals(tokenInRedis)){
-            throw new JWTException("用户已被其他地方登陆 请重新登陆" , 501);
+            throw new JWTException("用户已被其他地方登陆 请重新登陆" , HttpStatus.UNAUTHORIZED.value());
         }
     }
 

@@ -78,7 +78,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     @Override
     public void remove(Long[] ids) {
         if (ObjectUtil.isEmpty(ids) || ids.length == 0){
-            new BusinessException("id為不能空",501);
+            new BusinessException("id為不能空",HttpStatus.NO_CONTENT.value());
         }
         removeByIds(Arrays.asList(ids));
     }
@@ -108,9 +108,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
         students.forEach(student -> {
             StudentModel studentModel = new StudentModel();
             BeanUtil.copyProperties(student , studentModel);
-            Clazz clazz = classService.lambdaQuery().select(Clazz::getClassName,Clazz::getDId).eq(Clazz::getCId , student.getCId()).one();
+            Clazz clazz = classService.lambdaQuery().select(Clazz::getClassName,Clazz::getGrade,Clazz::getDId).eq(Clazz::getCId , student.getCId()).one();
             Department department = departmentService.lambdaQuery().select(Department::getDepartName).eq(Department::getDId, clazz.getDId()).one();
             studentModel.setClazz(clazz.getClassName());
+            studentModel.setGrade(clazz.getGrade());
             studentModel.setDepartment(department.getDepartName());
             studentModels.add(studentModel);
         });
@@ -129,6 +130,14 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
             }
         });
 
+    }
+
+    @Override
+    public void update(Student student) {
+        if (ObjectUtil.isEmpty(student)){
+            throw new BusinessException("学生信息不能为空",HttpStatus.NO_CONTENT.value());
+        }
+        this.updateById(student);
     }
 
 
