@@ -5,9 +5,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.tams.base.jwt.util.JWTConstant;
-import com.tams.enums.RoleEnum;
 import com.tams.exception.jwt.JWTException;
-import com.tams.model.LoginModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +21,15 @@ public class JWTService {
 
 
 
-  public String createToken(LoginModel login){
+  public String createToken(String sysUser){
 
     Calendar calendar = Calendar.getInstance();
     calendar.add(Calendar.MINUTE , JWTConstant.TIME);
 
-   return  JWT.create()
-               .withClaim(JWTConstant.USERNAME, login.getUsername())
-               .withClaim(JWTConstant.ROLE, login.getRole().getRole())
+    return  JWT.create()
+               .withClaim(JWTConstant.CLAIM, sysUser)
                .withExpiresAt(calendar.getTime())
                .sign(Algorithm.HMAC512(JWTConstant.SECRET));
-
   }
 
   public DecodedJWT verify(String token){
@@ -48,16 +44,12 @@ public class JWTService {
 
   }
 
-  public LoginModel verifyGetLoginBody(String token){
+  public String verifyGetSysUser(String token){
 
       try {
           DecodedJWT verify = verify(token);
-          String uid = verify.getClaim(JWTConstant.USERNAME).asString();
-          String role = verify.getClaim(JWTConstant.ROLE).asString();
-          LoginModel loginBody = new LoginModel();
-          loginBody.setUsername(uid);
-          loginBody.setRole(RoleEnum.StringParseRole(role));
-          return loginBody;
+          String sysUser = verify.getClaim(JWTConstant.CLAIM).asString();
+          return sysUser;
       } catch (Exception e){
           throw new JWTException("身份校验失败, 请重新登陆" , HttpStatus.UNAUTHORIZED.value());
       }

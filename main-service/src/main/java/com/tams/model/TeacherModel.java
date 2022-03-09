@@ -15,6 +15,10 @@ public class TeacherModel extends Teacher {
 
   private String department;
 
+  private Boolean isPresident = false;
+
+  private Boolean isVicePresident = false;
+
   private List<String> clazz;
 
   private Boolean isT;

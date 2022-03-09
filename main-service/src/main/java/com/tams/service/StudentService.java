@@ -17,10 +17,6 @@ public interface StudentService extends IService<Student> {
 
     void add(StudentModel studentModel);
 
-    PageResult online();
-
-    void offline(String ids[]);
-
     void update(Student student);
 
 }

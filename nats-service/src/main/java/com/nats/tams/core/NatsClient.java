@@ -46,7 +46,9 @@ public class NatsClient {
             natsBuilder.pingInterval(Duration.ofSeconds(pingInterval));
         }
 
-            this.options = natsBuilder.build();
+            this.options = natsBuilder.connectionListener((Connection conn, ConnectionListener.Events type)->{
+                log.info("nats connect success [{}]" , conn.getConnectedUrl() );
+            }).build();
         try {
             this.nc = Nats.connect(this.options);
         } catch (Exception e) {

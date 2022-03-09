@@ -1,12 +1,12 @@
 hpu-tams:
   # 项目名
- project-name: hpu-tams
+  project-name: hpu-tams
   # 作者
- author: swiChen
+  author: swiChen
   # 部署环境的ip
- host: 119.23.60.23
+  host: 119.23.60.23
   # 项目版本
- version: 1.0.0
+  version: 1.0.0
 
 server:
   port: 8100 # 项目端口
@@ -18,8 +18,7 @@ server:
 spring:
   application:
     name: ${hpu-tams.project-name} # 服务名
-  profiles:
-    active: dev
+
 
   # banner
   banner:
@@ -50,16 +49,16 @@ spring:
 
   # 配置redis
   redis:
-   host: ${hpu-tams.host}
-   port: 6379
-   password: qwert
-   database: 0
-   jedis:
-    pool:
-      max-active: 10
-      max-idle: 5
-      min-idle: 3
-      max-wait: 2ms
+    host: ${hpu-tams.host}
+    port: 6379
+    password: qwert
+    database: 0
+    jedis:
+      pool:
+        max-active: 10
+        max-idle: 5
+        min-idle: 3
+        max-wait: 2ms
 
 
 
@@ -90,7 +89,7 @@ spring:
 # 配置mybatis-plus
 mybatis-plus:
   # 扫描包
-#  mapper-package: com.tams.mapper
+  #  mapper-package: com.tams.mapper
   # 配置别名
   type-aliases-package: com.tams.domain
   # 没有所以不check

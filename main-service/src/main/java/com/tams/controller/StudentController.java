@@ -16,52 +16,40 @@ import javax.annotation.Resource;
  **/
 
 @RestController
-@RequestMapping("/student/")
+@RequestMapping("/student")
 public class StudentController {
 
     @Resource
     private StudentService studentService;
 
-    @GetMapping("{id}/query")
+    @GetMapping("/{id}/query")
     public AjaxResult<Student> query(@PathVariable("id") Long sId){
         return AjaxResult.succ(studentService.getById(sId));
     }
 
-    @GetMapping("list/all")
+    @GetMapping("/list")
     public AjaxResult<PageResult> getList(PageParam page){
+
         return AjaxResult.succ(studentService.getStudents(page));
     }
 
-    @PostMapping("remove")
+    @PostMapping("/remove")
     public AjaxResult<Void> remove(@RequestBody Long []ids){
         studentService.remove(ids);
         return AjaxResult.succ(null);
     }
 
-    @PostMapping("add")
-    public AjaxResult<Void> remove(@RequestBody StudentModel studentModel){
+    @PostMapping("/add")
+    public AjaxResult<Void> add(@RequestBody StudentModel studentModel){
         studentService.add(studentModel);
-        return AjaxResult.succ(null);
+        return AjaxResult.succ("ok");
     }
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public AjaxResult update(@RequestBody Student student){
         studentService.update(student);
         return AjaxResult.succ("ok");
     }
-
-    @GetMapping("online")
-    public AjaxResult online(){
-        PageResult online = studentService.online();
-        return AjaxResult.succ(online);
-    }
-
-    @PostMapping("offline")
-    public AjaxResult offline(@RequestBody String []ids){
-        studentService.offline(ids);
-        return AjaxResult.succ("ok");
-    }
-
 
 
 }

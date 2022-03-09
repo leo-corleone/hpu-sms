@@ -42,7 +42,7 @@ public class Student implements Serializable{
     @JsonFormat(pattern = "yyyy-MM-dd" ,timezone = "GMT+8")
     private Date timeOfEnrollment;
 
-
+    @JsonFormat
     private Long cId;
 
     private String pwd;

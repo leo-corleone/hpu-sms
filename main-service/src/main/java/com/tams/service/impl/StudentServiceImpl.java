@@ -1,15 +1,11 @@
 package com.tams.service.impl;
 
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.tams.base.redis.RedisService;
-import com.tams.base.redis.util.RedisConstant;
-import com.tams.domain.Clazz;
-import com.tams.domain.Department;
 import com.tams.domain.Student;
 import com.tams.dto.PageParam;
 import com.tams.dto.PageResult;
@@ -23,12 +19,11 @@ import com.tams.service.StudentService;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -69,8 +64,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     public PageResult getStudents(PageParam model) {
 
         Page<Object> objects = PageHelper.startPage(model.getPage(), model.getPageSize());
+        if (StringUtils.isEmpty(model.getOrder()) || StringUtils.isEmpty(model.getSortBy())){
+            model.setOrder("asc");
+            model.setSortBy("s_id");
+        }
         PageResult<List<StudentModel>> pageResult = new PageResult<>();
-        pageResult.setItems(studentMapper.getStudentAll());
+        pageResult.setItems(studentMapper.getStudentAll(model));
         pageResult.setTotal(objects.getTotal());
         return pageResult;
     }
@@ -89,47 +88,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
           throw   new BusinessException("数据不能为空", HttpStatus.NO_CONTENT.value());
         }
         super.save(studentModel);
-    }
-
-    @Override
-    public PageResult online() {
-
-        Set<String> Ids = redisService.getStudentIds();
-        if (Ids.isEmpty()){
-            return null;
-        }
-        List<String> newIds = new ArrayList<>(Ids.size());
-        Ids.forEach(id -> {
-            newIds.add(id.replace(RedisConstant.TOKEN_STUDENT_PREFIX , ""));
-        });
-
-        List<Student> students = this.lambdaQuery().in(Student::getSId, newIds).list();
-        List<StudentModel> studentModels = new ArrayList<>();
-        students.forEach(student -> {
-            StudentModel studentModel = new StudentModel();
-            BeanUtil.copyProperties(student , studentModel);
-            Clazz clazz = classService.lambdaQuery().select(Clazz::getClassName,Clazz::getGrade,Clazz::getDId).eq(Clazz::getCId , student.getCId()).one();
-            Department department = departmentService.lambdaQuery().select(Department::getDepartName).eq(Department::getDId, clazz.getDId()).one();
-            studentModel.setClazz(clazz.getClassName());
-            studentModel.setGrade(clazz.getGrade());
-            studentModel.setDepartment(department.getDepartName());
-            studentModels.add(studentModel);
-        });
-        PageResult pageResult = new PageResult();
-        pageResult.setItems(studentModels);
-        pageResult.setTotal(Long.valueOf(newIds.size()));
-        return pageResult;
-    }
-
-    @Override
-    public void offline(String[] ids) {
-        Arrays.stream(ids).forEach(id ->{
-            String k = RedisConstant.TOKEN_STUDENT_PREFIX+id;
-            if (redisService.exists(k)){
-               redisService.remove(k);
-            }
-        });
-
     }
 
     @Override

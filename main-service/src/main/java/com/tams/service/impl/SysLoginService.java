@@ -1,6 +1,7 @@
 package com.tams.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.tams.base.jwt.JWTService;
 import com.tams.base.nats.NatsService;
 import com.tams.base.redis.RedisService;
@@ -10,13 +11,17 @@ import com.tams.domain.Teacher;
 import com.tams.enums.RoleEnum;
 import com.tams.exception.base.BusinessException;
 import com.tams.model.LoginModel;
+import com.tams.model.SysUser;
 import com.tams.service.StudentService;
 import com.tams.service.TeacherService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author swiChen
@@ -42,12 +47,14 @@ public class SysLoginService {
    @Resource
    private NatsService natsService;
 
+   private final Lock lock = new ReentrantLock();
+
    public String login(LoginModel login){
 
        if (ObjectUtil.isEmpty(login)){
           throw new BusinessException("登录信息为空" , 500);
        }
-       String token = null;
+       SysUser sysUser  = new SysUser();
        if (login.getRole() == RoleEnum.STUDENT){
           Student student = studentService.lambdaQuery()
                            .eq(Student::getSId , new Long(login.getUsername()))
@@ -55,42 +62,59 @@ public class SysLoginService {
           if (ObjectUtil.isEmpty(student)){
              throw new BusinessException("用户不存在", 501);
           }
-          token = loginHandle(RedisConstant.TOKEN_STUDENT_PREFIX+student.getSId() , login);
+          BeanUtils.copyProperties(student , sysUser);
+          sysUser.setUId(student.getSId());
       }
-      else {
+      else if(login.getRole() == RoleEnum.TEACHER || login.getRole() == RoleEnum.ROOT || login.getRole() == RoleEnum.ADMIN){
          Teacher teacher = teacherService.lambdaQuery()
               .eq(Teacher::getTId , new Long(login.getUsername()))
               .eq(Teacher::getPwd , login.getPassword()).one();
+         BeanUtils.copyProperties(teacher , sysUser);
+         sysUser.setUId(teacher.getTId());
           if (ObjectUtil.isEmpty(teacher)){
              throw new BusinessException("用户不存在", 501);
           }
-          switch (login.getRole()){
-              case TEACHER:
-                 token = loginHandle(RedisConstant.TOKEN_TEACHER_PREFIX+teacher.getTId() , login);
-              break;
-              case ROOT:
-                 token = loginHandle(RedisConstant.TOKEN_ROOT_PREFIX+teacher.getTId() , login);
-              break;
-              case ADMIN:
-                  token = loginHandle(RedisConstant.TOKEN_ADMIN_PREFIX+teacher.getTId() , login);
-              break;
-          }
-      }
+      }else {
+           throw new BusinessException("用户身份不存在", 501);
+       }
+       sysUser.setRole(login.getRole());
+       String user = JSONObject.toJSONString(sysUser);
+
+      // 校验 用户是否已经登录
+      verifyLogin(login);
+      // 生成token
+      String token = generateToken(user);
+      cacheUser(login , user , token);
       return token;
+
    }
 
-   private String loginHandle(String redisK , LoginModel login){
-       if (redisService.exists(redisK)){
+   private void verifyLogin(LoginModel login){
+
+       String k = RedisConstant.getRedisK(login.getRole());
+       k = k+login.getUsername();
+       if (redisService.exists(k)){
            log.info("用户: {} role:{} 被覆盖登陆" , login.getUsername() , login.getRole().getRole());
            //  发送nats通知  账号已在别处登陆
 //               natsClient.publish("","");
            String subject = login.getRole().getRole()+"."+login.getUsername();
            natsService.LoginNats(subject , null);
        }
-       String token = jwtService.createToken(login);
-       redisService.set(redisK , token ,TimeUnit.MINUTES , RedisConstant.TOKEN_RESTORE_TIME );
-       return token;
    }
 
+   private String generateToken(String user){
+       return jwtService.createToken(user);
+   }
+
+   private void cacheUser(LoginModel login , String sysUser , String token){
+       String k = RedisConstant.getRedisK(login.getRole()) + login.getUsername();
+       redisService.cacheHash(k , RedisConstant.USER_INFO_CACHE , sysUser);
+       redisService.cacheHash(k , RedisConstant.USER_TOKEN_CACHE , token);
+       String time = redisService.getValue(RedisConstant.TOKEN_EXPIRE_TIME);
+       if (ObjectUtil.isEmpty(time) || "".equals(time)){
+           time = RedisConstant.TOKEN_DEFAULT_RESTORE_TIME.toString();
+       }
+       redisService.expire(k , TimeUnit.MINUTES , Long.valueOf(time));
+   }
 
 }

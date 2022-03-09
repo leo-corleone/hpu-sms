@@ -8,12 +8,10 @@ public class JWTConstant {
 
     public static final String SECRET = "sWichEnIsKing";
 
-    public static final Integer TIME = 20;
+    public static final Integer TIME = 30;
 
     public static final String TOKEN_NAME = "Authorization";
 
-    public static final String USERNAME = "username";
-
-    public static final String ROLE = "role";
+    public static final String CLAIM = "username";
 
 }

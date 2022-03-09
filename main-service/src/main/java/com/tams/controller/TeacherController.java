@@ -1,10 +1,10 @@
 package com.tams.controller;
 
 import com.tams.dto.AjaxResult;
+import com.tams.dto.PageParam;
+import com.tams.model.TeacherModel;
 import com.tams.service.TeacherService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -20,8 +20,23 @@ public class TeacherController {
     @Resource
     private TeacherService teacherService;
 
-    @GetMapping("/list/all")
-    public AjaxResult getAll(){
-        return AjaxResult.succ(teacherService.getAll());
+    @GetMapping("/list")
+    public AjaxResult getList(PageParam page){
+        return AjaxResult.succ(teacherService.getList(page));
+    }
+
+    @PostMapping("/remove")
+    public AjaxResult delete(@RequestBody Integer []ids){
+        return AjaxResult.succ(teacherService.deleteTeacher(ids));
+    }
+
+    @PostMapping("/add")
+    public AjaxResult add(@RequestBody TeacherModel teacherModel){
+        return AjaxResult.succ(teacherService.save(teacherModel));
+    }
+
+    @PostMapping("/update")
+    public AjaxResult update(@RequestBody TeacherModel teacherModel){
+        return  AjaxResult.succ(teacherService.updateById(teacherModel));
     }
 }

@@ -19,7 +19,16 @@ public class SysUser {
 
     private Long uId;
 
+    private String name;
+
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
+
+    private Integer age;
+
+    private String gender;
+
+    private String pwd;
+
 
 }

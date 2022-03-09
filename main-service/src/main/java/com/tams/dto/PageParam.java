@@ -7,6 +7,7 @@ import lombok.Data;
  * @date 2022/1/19
  **/
 
+
 @Data
 public class PageParam {
 
@@ -18,6 +19,7 @@ public class PageParam {
 
     private String sortBy;
 
-    private String type;
+    private String keyword;
 
+    private String type;
 }

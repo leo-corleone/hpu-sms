@@ -47,9 +47,17 @@
                 left join image i on s.i_id = i.i_id
     </sql>
 
-    <select id="getStudentAll" resultMap="studentByIdMap">
+    <select id="getStudentAll" parameterType="com.tams.dto.PageParam" resultMap="studentByIdMap">
         <include refid="selectStudentSql"></include>
         where s.is_delete = 1
+        <if test="param.keyword != ''">
+          and  s_id like "%${param.keyword}%" or s.name like "%${param.keyword}%" or s.age like "%${param.keyword}%"
+            or s.gender like "%${param.keyword}%" or s.birthday like "%${param.keyword}%" or s.tel like "%${param.keyword}%"
+            or s.status like "%${param.keyword}%" or s.time_of_enrollment like "%${param.keyword}%"
+            or c.grade like "%${param.keyword}%" or c.class_name like "%${param.keyword}%"
+            or s.c_id like "%${param.keyword}%" or d.depart_name like "%${param.keyword}%"
+        </if>
+        order by ${param.sortBy} ${param.order}
     </select>
     <select id="getStudentById" parameterType="long" resultMap="studentByIdMap">
         <include refid="selectStudentSql"></include>

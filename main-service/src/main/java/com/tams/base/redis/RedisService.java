@@ -1,12 +1,9 @@
 package com.tams.base.redis;
 
-import com.tams.base.redis.util.RedisConstant;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,33 +17,32 @@ public class RedisService {
     @Resource(name = "stringRedisTemplate")
     private StringRedisTemplate redisTemplate;
 
-    public void set(String k , String v){
+
+    public void cacheHash(String k , String field , String value){
+        redisTemplate.opsForHash().put(k , field , value);
+    }
+
+    public String getCacheHash(String k , String field){
+        return (redisTemplate.opsForHash().get(k, field)).toString();
+    }
+
+    public Boolean expire(String k , TimeUnit unit , Long time ){
+       return redisTemplate.expire(k ,time , unit);
+    }
+
+    public void cacheValue(String k , String v){
         redisTemplate.opsForValue().set(k,v);
     }
 
-    public void set(String k , String v , TimeUnit unit , Long time){
+    public void cacheValue(String k , String v , TimeUnit unit , Long time){
         redisTemplate.opsForValue().set(k,v,time,unit);
     }
 
-    public String get(String k){
+    public String getValue(String k){
       return redisTemplate.opsForValue().get(k);
     }
 
-    public Set<String> getStudentIds(){
-        return redisTemplate.keys(RedisConstant.TOKEN_STUDENT_PREFIX+"*");
-    }
 
-    public void lpush(String k , String ...v){
-        redisTemplate.opsForList().leftPushAll(k ,v);
-    }
-
-    public String lpop(String k){
-        return redisTemplate.opsForList().leftPop(k);
-    }
-
-    public List<String> lrange(String k , Long start , Long end){
-       return redisTemplate.opsForList().range(k,start ,end);
-    }
 
     public boolean exists(String k){
        return Boolean.TRUE.equals(redisTemplate.hasKey(k));
