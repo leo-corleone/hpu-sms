@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Date;
 @Accessors(chain = true)
 @Data
 @TableName("online_user")
-public class OnlineUser {
+public class OnlineUser implements Serializable {
 
     @TableId
     private Integer id;

@@ -5,6 +5,7 @@ import com.tams.domain.OnlineUser;
 import com.tams.model.LoginModel;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author swiChen
@@ -15,6 +16,8 @@ public interface OnlineUserService extends IService<OnlineUser> {
     void recordLogin(LoginModel login , HttpServletRequest request);
 
 
-    Boolean offline(Integer[] ids);
+    Boolean offline(List<OnlineUser> users);
+
+    Boolean autoOffline();
 
 }

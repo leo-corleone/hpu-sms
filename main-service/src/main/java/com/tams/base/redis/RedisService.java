@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,14 +43,16 @@ public class RedisService {
       return redisTemplate.opsForValue().get(k);
     }
 
-
-
     public boolean exists(String k){
        return Boolean.TRUE.equals(redisTemplate.hasKey(k));
     }
 
     public boolean remove(String k){
         return Boolean.TRUE.equals(redisTemplate.delete(k));
+    }
+
+    public Set<String> keys(String pattern){
+      return redisTemplate.keys(pattern);
     }
 
 }

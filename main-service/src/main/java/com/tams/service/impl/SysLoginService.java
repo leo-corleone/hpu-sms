@@ -110,9 +110,9 @@ public class SysLoginService {
        String k = RedisConstant.getRedisK(login.getRole()) + login.getUsername();
        redisService.cacheHash(k , RedisConstant.USER_INFO_CACHE , sysUser);
        redisService.cacheHash(k , RedisConstant.USER_TOKEN_CACHE , token);
-       String time = redisService.getValue(RedisConstant.TOKEN_EXPIRE_TIME);
+       String time = redisService.getValue(RedisConstant.USER_EXPIRE_TIME);
        if (ObjectUtil.isEmpty(time) || "".equals(time)){
-           time = RedisConstant.TOKEN_DEFAULT_RESTORE_TIME.toString();
+           time = RedisConstant.USER_DEFAULT_RESTORE_TIME.toString();
        }
        redisService.expire(k , TimeUnit.MINUTES , Long.valueOf(time));
    }

@@ -21,9 +21,11 @@ public final class RedisConstant {
 
     public static final String USER_TOKEN_CACHE = "user_token_cache";
 
-    public static final String TOKEN_EXPIRE_TIME = "token_expire_token";
+    public static final String USER_EXPIRE_TIME = "user_expire_time";
 
-    public static final Long  TOKEN_DEFAULT_RESTORE_TIME = 20L;
+    public static final String USER_CACHE_PATTERN = "user_*_cache:*";
+
+    public static final Long  USER_DEFAULT_RESTORE_TIME = 20L;
 
     public static String getRedisK(RoleEnum role){
         String k = "";

@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tams.base.redis.RedisService;
+import com.tams.base.redis.util.RedisConstant;
 import com.tams.domain.OnlineUser;
 import com.tams.domain.Student;
 import com.tams.domain.Teacher;
@@ -20,9 +21,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -81,20 +82,38 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
     }
 
     @Override
-    public Boolean offline(Integer[] ids) {
-
-        if (ObjectUtil.isEmpty(ids)){
+    public Boolean offline(List<OnlineUser> onlines) {
+        if (ObjectUtil.isEmpty(onlines)){
             log.info("编号不能为null");
             return false;
         }
-
-        List<OnlineUser> onlines = this.lambdaQuery().in(OnlineUser::getId, Arrays.asList(ids)).list();
-        List<Long> uIds = onlines.stream().map(OnlineUser::getUId).collect(Collectors.toList());
-        uIds.forEach(uId -> {
-
+        onlines.forEach(onlineUser -> {
+            String redisK = RedisConstant.getRedisK(onlineUser.getRole());
+            String cacheK = redisK+onlineUser.getUId();
+            boolean exists = redisService.exists(cacheK);
+            boolean isRemove = redisService.remove(cacheK);
+            if (exists || !isRemove){
+                removeById(onlineUser);
+                // TODO 应该发送nats通知的
+            }
         });
-        // TODO 应该发送nats通知的
-        return null;
+        return true;
+    }
+
+    @Override
+    public Boolean autoOffline() {
+
+        Set<String> keys = redisService.keys(RedisConstant.USER_CACHE_PATTERN);
+        if (keys.isEmpty()){
+            return false;
+        }
+        Set<Object> ids = keys.stream().map(key -> {
+            int index = key.lastIndexOf(":");
+            return  key.substring(index+1);
+        }).collect(Collectors.toSet());
+
+        List<OnlineUser> list = this.lambdaQuery().notIn(OnlineUser::getUId, ids).list();
+        return ObjectUtil.isNotEmpty(list) || list.size() > 0 ? offline(list) : false;
     }
 
 
