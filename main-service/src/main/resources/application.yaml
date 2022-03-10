@@ -4,7 +4,7 @@ hpu-tams:
   # 作者
  author: swiChen
   # 部署环境的ip
- host: 119.23.60.23
+ host: *********
   # 项目版本
  version: 1.0.0
 
