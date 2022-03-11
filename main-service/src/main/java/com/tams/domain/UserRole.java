@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,7 +30,8 @@ public class UserRole implements Serializable {
 
     private Long createBy;
 
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private String status;
 
     @TableLogic
     private String isDelete;

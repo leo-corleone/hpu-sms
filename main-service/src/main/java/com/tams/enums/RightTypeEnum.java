@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum RightTypeEnum {
 
+
+
     ALL("全部"),
 
     STUDENT("学生"),
@@ -26,8 +28,13 @@ public enum RightTypeEnum {
 
     NOTICE("通知"),
 
-    DEPARTMENT("学院");
+    DEPARTMENT("学院"),
+
+    ONLINE("在线"),
+
+    CONFIG("配置");
 
     private String rightType;
+
 
 }

@@ -4,6 +4,7 @@ import com.nats.tams.exception.NatsException;
 import com.tams.dto.AjaxResult;
 import com.tams.exception.base.BusinessException;
 import com.tams.exception.jwt.JWTException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +20,7 @@ import java.io.IOException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = NatsException.class)
@@ -47,7 +49,9 @@ public class GlobalExceptionHandler {
         return AjaxResult.error(501,e.getMessage());
     }
 
+
     private void setError(Integer code , String msg , HttpServletResponse response){
+        log.error("状态码: [{}] msg:[{}]," , code , msg);
         try {
           response.sendError(code , msg);
           response.setContentType("application/json;charset=UTF-8");

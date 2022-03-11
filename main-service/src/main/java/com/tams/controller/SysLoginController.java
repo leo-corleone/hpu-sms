@@ -1,6 +1,9 @@
 package com.tams.controller;
 
+import com.tams.annotation.Permission;
 import com.tams.dto.AjaxResult;
+import com.tams.enums.OperationTypeEnum;
+import com.tams.enums.RightTypeEnum;
 import com.tams.model.LoginModel;
 import com.tams.service.OnlineUserService;
 import com.tams.service.impl.SysLoginService;
@@ -27,7 +30,7 @@ public class SysLoginController {
     @Resource
     private OnlineUserService onlineUserService;
 
-
+    @Permission(operation = OperationTypeEnum.R , right = RightTypeEnum.STUDENT)
     @PostMapping("/login")
     public AjaxResult<Object> login(@RequestBody LoginModel login,HttpServletRequest request){
 

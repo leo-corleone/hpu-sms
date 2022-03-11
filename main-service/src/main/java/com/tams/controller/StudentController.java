@@ -1,9 +1,12 @@
 package com.tams.controller;
 
+import com.tams.annotation.Permission;
 import com.tams.domain.Student;
 import com.tams.dto.AjaxResult;
 import com.tams.dto.PageParam;
 import com.tams.dto.PageResult;
+import com.tams.enums.OperationTypeEnum;
+import com.tams.enums.RightTypeEnum;
 import com.tams.model.StudentModel;
 import com.tams.service.StudentService;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,7 @@ public class StudentController {
     @Resource
     private StudentService studentService;
 
+    @Permission(operation = OperationTypeEnum.R , right = RightTypeEnum.STUDENT)
     @GetMapping("/{id}/query")
     public AjaxResult<Student> query(@PathVariable("id") Long sId){
         return AjaxResult.succ(studentService.getById(sId));

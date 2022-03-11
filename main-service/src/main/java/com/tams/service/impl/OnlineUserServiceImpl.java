@@ -84,7 +84,7 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
     @Override
     public Boolean offline(List<OnlineUser> onlines) {
         if (ObjectUtil.isEmpty(onlines)){
-            log.info("编号不能为null");
+            log.info("在线用户数据不能为空");
             return false;
         }
         onlines.forEach(onlineUser -> {
@@ -105,7 +105,7 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
 
         Set<String> keys = redisService.keys(RedisConstant.USER_CACHE_PATTERN);
         if (keys.isEmpty()){
-            return false;
+            return offline(this.list());
         }
         Set<Object> ids = keys.stream().map(key -> {
             int index = key.lastIndexOf(":");

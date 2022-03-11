@@ -36,6 +36,6 @@ public class ConfigureInitTask implements InitializingBean {
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
 
-        scheduler.scheduleAtFixedRate(this::autoOffline, 2,3 , TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::autoOffline, 5,20 , TimeUnit.SECONDS);
     }
 }
