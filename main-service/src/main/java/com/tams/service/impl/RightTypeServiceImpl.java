@@ -35,7 +35,7 @@ public class RightTypeServiceImpl extends ServiceImpl<RightTypeMapper , RightTyp
         OperationTypeEnum operation = permission.operation();
         RightTypeEnum right = permission.right();
         // 判断当前请求的用户  是否有权限
-        // 1.判断是否是ROOT用户 则直接返回 true
+        // TODO 1.判断是否是ROOT用户 则直接返回 true
 
 
 
