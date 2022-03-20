@@ -2,7 +2,7 @@ package com.tams.configure;
 
 import com.tams.base.jwt.JWTService;
 import com.tams.base.redis.RedisService;
-import com.tams.interceptor.LoginInterceptor;
+import com.tams.interceptor.RequestAuthInterceptor;
 import com.tams.interceptor.ProcessInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -29,7 +29,7 @@ public class SysWebConfig implements WebMvcConfigurer {
 
 
           registry.addInterceptor(new ProcessInterceptor()).addPathPatterns("/**");
-          registry.addInterceptor(new LoginInterceptor(redisService , jwtService))
+          registry.addInterceptor(new RequestAuthInterceptor(redisService , jwtService))
                   .addPathPatterns("/**")
                   .excludePathPatterns("/login" ,"/error");
 

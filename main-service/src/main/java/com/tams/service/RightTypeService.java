@@ -1,8 +1,9 @@
 package com.tams.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tams.annotation.Permission;
 import com.tams.domain.RightType;
+
+import java.util.List;
 
 /**
  * @author swiChen
@@ -10,6 +11,8 @@ import com.tams.domain.RightType;
  **/
 public interface RightTypeService extends IService<RightType> {
 
-    boolean verifyRight(Permission permission);
+
+     List<RightType> getList();
+
 
 }

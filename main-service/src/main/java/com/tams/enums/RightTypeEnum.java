@@ -32,7 +32,9 @@ public enum RightTypeEnum {
 
     ONLINE("在线"),
 
-    CONFIG("配置");
+    CONFIG("配置"),
+
+    SYSCONFIG("系统配置");
 
     private String rightType;
 

@@ -1,7 +1,5 @@
 package com.tams.domain;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -21,7 +19,7 @@ import java.util.Date;
 @Accessors(chain = true)
 public class UserRole implements Serializable {
 
-    @TableId
+
     private Long rId;
 
     private Long uId;
@@ -33,7 +31,5 @@ public class UserRole implements Serializable {
     @Enumerated(EnumType.STRING)
     private String status;
 
-    @TableLogic
-    private String isDelete;
 
 }

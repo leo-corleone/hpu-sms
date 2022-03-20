@@ -9,6 +9,7 @@ import com.tams.base.redis.RedisService;
 import com.tams.domain.Student;
 import com.tams.dto.PageParam;
 import com.tams.dto.PageResult;
+import com.tams.enums.ResponseCode;
 import com.tams.exception.base.BusinessException;
 import com.tams.mapper.StudentMapper;
 import com.tams.model.StudentModel;
@@ -17,7 +18,6 @@ import com.tams.service.DepartmentService;
 import com.tams.service.ImageService;
 import com.tams.service.StudentService;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -77,7 +77,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     @Override
     public void remove(Long[] ids) {
         if (ObjectUtil.isEmpty(ids) || ids.length == 0){
-            new BusinessException("id為不能空",HttpStatus.NO_CONTENT.value());
+           throw  new BusinessException("请求数据不能为空", ResponseCode.NoContent.code);
         }
         removeByIds(Arrays.asList(ids));
     }
@@ -85,7 +85,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     @Override
     public void add(StudentModel studentModel) {
         if (ObjectUtil.isEmpty(studentModel) || ObjectUtil.hasEmpty(studentModel)){
-          throw   new BusinessException("数据不能为空", HttpStatus.NO_CONTENT.value());
+          throw   new BusinessException("数据不能为空", ResponseCode.NoContent.code);
         }
         super.save(studentModel);
     }
@@ -93,7 +93,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
     @Override
     public void update(Student student) {
         if (ObjectUtil.isEmpty(student)){
-            throw new BusinessException("学生信息不能为空",HttpStatus.NO_CONTENT.value());
+            throw new BusinessException("学生信息不能为空",ResponseCode.NoContent.code);
         }
         this.updateById(student);
     }

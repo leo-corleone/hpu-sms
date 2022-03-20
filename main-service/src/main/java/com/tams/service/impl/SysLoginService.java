@@ -8,12 +8,15 @@ import com.tams.base.redis.RedisService;
 import com.tams.base.redis.util.RedisConstant;
 import com.tams.domain.Student;
 import com.tams.domain.Teacher;
+import com.tams.domain.UserRole;
+import com.tams.enums.ResponseCode;
 import com.tams.enums.RoleEnum;
 import com.tams.exception.base.BusinessException;
 import com.tams.model.LoginModel;
 import com.tams.model.SysUser;
 import com.tams.service.StudentService;
 import com.tams.service.TeacherService;
+import com.tams.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -45,6 +48,9 @@ public class SysLoginService {
    private TeacherService teacherService;
 
    @Resource
+   private UserRoleService userRoleService;
+
+   @Resource
    private NatsService natsService;
 
    private final Lock lock = new ReentrantLock();
@@ -52,7 +58,7 @@ public class SysLoginService {
    public String login(LoginModel login){
 
        if (ObjectUtil.isEmpty(login)){
-          throw new BusinessException("登录信息为空" , 500);
+          throw new BusinessException("登录信息为空" , ResponseCode.NoContent.code);
        }
        SysUser sysUser  = new SysUser();
        if (login.getRole() == RoleEnum.STUDENT){
@@ -60,23 +66,34 @@ public class SysLoginService {
                            .eq(Student::getSId , new Long(login.getUsername()))
                            .eq(Student::getPwd , login.getPassword()).one();
           if (ObjectUtil.isEmpty(student)){
-             throw new BusinessException("用户不存在", 501);
+             throw new BusinessException("用户不存在", ResponseCode.NoUser.code);
           }
           BeanUtils.copyProperties(student , sysUser);
           sysUser.setUId(student.getSId());
       }
       else if(login.getRole() == RoleEnum.TEACHER || login.getRole() == RoleEnum.ROOT || login.getRole() == RoleEnum.ADMIN){
-         Teacher teacher = teacherService.lambdaQuery()
-              .eq(Teacher::getTId , new Long(login.getUsername()))
-              .eq(Teacher::getPwd , login.getPassword()).one();
+
+           Teacher teacher = teacherService.lambdaQuery()
+                   .eq(Teacher::getTId , new Long(login.getUsername()))
+                   .eq(Teacher::getPwd , login.getPassword()).one();
+
+          if (ObjectUtil.isEmpty(teacher)){
+               throw new BusinessException("用户不存在", ResponseCode.NoUser.code);
+          }
+
+          if (login.getRole() == RoleEnum.ROOT || RoleEnum.ADMIN == login.getRole()){
+              Integer count = userRoleService.lambdaQuery().eq(UserRole::getUId, login.getUsername()).count();
+              if (count == 0){
+                  throw new BusinessException("非管理员无法登录", ResponseCode.UNAdmin.code);
+              }
+          }
          BeanUtils.copyProperties(teacher , sysUser);
          sysUser.setUId(teacher.getTId());
-          if (ObjectUtil.isEmpty(teacher)){
-             throw new BusinessException("用户不存在", 501);
-          }
+
       }else {
-           throw new BusinessException("用户身份不存在", 501);
-       }
+           throw new BusinessException("用户身份不存在", ResponseCode.NoUser.code);
+      }
+
        sysUser.setRole(login.getRole());
        String user = JSONObject.toJSONString(sysUser);
 

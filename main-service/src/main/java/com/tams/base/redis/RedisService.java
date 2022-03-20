@@ -4,6 +4,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +25,10 @@ public class RedisService {
     }
 
     public String getCacheHash(String k , String field){
-        return (redisTemplate.opsForHash().get(k, field)).toString();
+        if (!exists(k)){
+            return null;
+        }
+        return Objects.requireNonNull(redisTemplate.opsForHash().get(k, field)).toString();
     }
 
     public Boolean expire(String k , TimeUnit unit , Long time ){

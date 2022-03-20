@@ -49,6 +49,7 @@ public class NatsClient {
             this.options = natsBuilder.connectionListener((Connection conn, ConnectionListener.Events type)->{
                 log.info("nats connect success [{}]" , conn.getConnectedUrl() );
             }).build();
+
         try {
             this.nc = Nats.connect(this.options);
         } catch (Exception e) {

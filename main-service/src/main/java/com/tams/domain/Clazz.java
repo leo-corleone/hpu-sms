@@ -28,7 +28,7 @@ public class Clazz implements Serializable {
 
     private Long dId;
 
-    private Integer total;
+    private Integer total = 0;
 
     private Integer grade;
 

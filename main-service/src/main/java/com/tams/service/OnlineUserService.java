@@ -18,6 +18,8 @@ public interface OnlineUserService extends IService<OnlineUser> {
 
     Boolean offline(List<OnlineUser> users);
 
+    Boolean offline();
+
     Boolean autoOffline();
 
 }

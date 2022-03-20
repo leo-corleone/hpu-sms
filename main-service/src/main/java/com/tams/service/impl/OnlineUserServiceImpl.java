@@ -11,9 +11,11 @@ import com.tams.domain.Teacher;
 import com.tams.enums.RoleEnum;
 import com.tams.mapper.OnlineUserMapper;
 import com.tams.model.LoginModel;
+import com.tams.model.SysUser;
 import com.tams.service.OnlineUserService;
 import com.tams.service.StudentService;
 import com.tams.service.TeacherService;
+import com.tams.util.SysUserContextHandler;
 import eu.bitwalker.useragentutils.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -98,6 +100,14 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
             }
         });
         return true;
+    }
+
+    @Override
+    public Boolean offline() {
+
+        SysUser sysUser = SysUserContextHandler.getSysUser();
+        //TODO 删除redis
+        return this.lambdaUpdate().eq(OnlineUser::getUId , sysUser.getUId()).eq(OnlineUser::getRole , sysUser.getRole()).remove();
     }
 
     @Override

@@ -2,8 +2,9 @@ package com.tams.apsectj;
 
 import com.tams.annotation.Permission;
 import com.tams.dto.AjaxResult;
+import com.tams.enums.ResponseCode;
 import com.tams.exception.base.BusinessException;
-import com.tams.service.RightTypeService;
+import com.tams.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -12,7 +13,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
@@ -29,7 +29,7 @@ public class RightAuthAspect {
 
 
     @Resource
-    private RightTypeService rightTypeService;
+    private UserRoleService userRoleService;
 
     @Pointcut("execution( * com.tams.controller.*.* (..))")
     public void rightPointcut(){};
@@ -42,12 +42,12 @@ public class RightAuthAspect {
         boolean isPerAuth = method.isAnnotationPresent(Permission.class);
         if (isPerAuth){
              Permission permission = method.getDeclaredAnnotation(Permission.class);
-             if (permission.isLog()){
-                 log.info("permission --> class: [{}] method: [{}]  right: [{}] operation: [{}]", jp.getTarget().getClass().getName() , method.getName() , permission.right() , permission.operation());
-             }
-            boolean b = rightTypeService.verifyRight(permission);
+            if (permission.isLog()){
+                log.info("permission --> class: [{}] method: [{}]  right: [{}] operation: [{}]", jp.getTarget().getClass().getName() , method.getName() , permission.right() , permission.operation());
+            }
+            boolean b = userRoleService.verifyRight(permission);
             if (!b){
-                return AjaxResult.error(HttpStatus.FORBIDDEN.value(), "权限不足 请联系管理员");
+                return AjaxResult.error(ResponseCode.UNRight.code, "权限不足 请联系管理员");
             }
         }
 

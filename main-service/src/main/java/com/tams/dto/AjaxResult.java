@@ -24,12 +24,12 @@ public class AjaxResult<T>{
 
     public AjaxResult (T data){
         this.code = ResponseCode.OK.getCode();
-        this.msg  = ResponseCode.OK.getDesc();
+        this.msg  = ResponseCode.OK.getReason();
         this.data = data;
     }
 
     public static <T> AjaxResult<T> succ(T data){
-        return new AjaxResult<T>(ResponseCode.OK.getCode() , ResponseCode.OK.getDesc(), data);
+        return new AjaxResult<T>(ResponseCode.OK.getCode() , ResponseCode.OK.getReason(), data);
     }
 
     public static AjaxResult<Void> succ(String msg){
@@ -59,7 +59,7 @@ public class AjaxResult<T>{
 
     public AjaxResult<T> succ(ResponseCode responseCode , T data){
         this.code = 200;
-        this.msg  = responseCode.getDesc();
+        this.msg  = responseCode.getReason();
         this.data = data;
         return this;
     };
@@ -73,7 +73,7 @@ public class AjaxResult<T>{
 
     public AjaxResult<T> error(ResponseCode responseCode){
         this.code = responseCode.getCode();
-        this.msg = responseCode.getDesc();
+        this.msg = responseCode.getReason();
         return this;
     };
 }

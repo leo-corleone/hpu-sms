@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @Slf4j
-@Profile("dev")
+@Profile("prod")
 public class ConfigureInitTask implements InitializingBean {
 
     @Resource

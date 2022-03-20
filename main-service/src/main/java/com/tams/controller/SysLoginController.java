@@ -30,7 +30,6 @@ public class SysLoginController {
     @Resource
     private OnlineUserService onlineUserService;
 
-    @Permission(operation = OperationTypeEnum.R , right = RightTypeEnum.STUDENT)
     @PostMapping("/login")
     public AjaxResult<Object> login(@RequestBody LoginModel login,HttpServletRequest request){
 

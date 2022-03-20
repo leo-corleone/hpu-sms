@@ -1,5 +1,6 @@
 package com.tams.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.tams.enums.RightTypeEnum;
 import lombok.Data;
@@ -19,6 +20,7 @@ import javax.persistence.Enumerated;
 @TableName("right_type")
 public class RightType {
 
+ @TableId
  private Long rtId;
 
  private String name;

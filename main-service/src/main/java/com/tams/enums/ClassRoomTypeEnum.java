@@ -16,6 +16,8 @@ public enum ClassRoomTypeEnum {
 
     COMPUTER("机房"),
 
+    MEETING("会议室"),
+
     OTHER("其它");
 
     private String desc;

@@ -31,24 +31,28 @@ public class StudentController {
         return AjaxResult.succ(studentService.getById(sId));
     }
 
+    @Permission(operation = OperationTypeEnum.R , right = RightTypeEnum.STUDENT)
     @GetMapping("/list")
     public AjaxResult<PageResult> getList(PageParam page){
 
         return AjaxResult.succ(studentService.getStudents(page));
     }
 
+    @Permission(operation = OperationTypeEnum.W, right = RightTypeEnum.STUDENT)
     @PostMapping("/remove")
     public AjaxResult<Void> remove(@RequestBody Long []ids){
         studentService.remove(ids);
         return AjaxResult.succ(null);
     }
 
+    @Permission(operation = OperationTypeEnum.W, right = RightTypeEnum.STUDENT)
     @PostMapping("/add")
     public AjaxResult<Void> add(@RequestBody StudentModel studentModel){
         studentService.add(studentModel);
         return AjaxResult.succ("ok");
     }
 
+    @Permission(operation = OperationTypeEnum.W, right = RightTypeEnum.STUDENT)
     @PostMapping("/update")
     public AjaxResult update(@RequestBody Student student){
         studentService.update(student);

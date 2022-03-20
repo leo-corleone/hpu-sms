@@ -30,4 +30,6 @@ public class ClassRoom implements Serializable {
 
     private Integer capacity;
 
+    private Integer status;
+
 }
