@@ -4,6 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.tams.domain.Clazz;
 import com.tams.domain.Department;
 import com.tams.domain.Teacher;
@@ -40,6 +42,15 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper , Teacher> imp
     @Override
     public PageResult getList(PageParam pageParam) {
 
+        Page<Object> objects = null;
+        if (ObjectUtil.isEmpty(pageParam.getPage()) || ObjectUtil.isEmpty(pageParam.getPageSize())){
+            pageParam.setPage(1);
+            pageParam.setPageSize(1000);
+            objects = PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+        }else{
+            objects = PageHelper.startPage(pageParam.getPage(), pageParam.getPageSize());
+        }
+
         List<Teacher> teachers = super.lambdaQuery().like(StringUtils.hasLength(pageParam.getKeyword()),Teacher::getName , pageParam.getKeyword()).list();
         List<TeacherModel> teacherModels = new ArrayList<>(teachers.size());
 
@@ -62,7 +73,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper , Teacher> imp
             teacherModels.add(teacherModel);
         });
         PageResult pageResult = new PageResult();
-        pageResult.setTotal(Long.valueOf(teacherModels.size()));
+        pageResult.setTotal(objects.getTotal());
         pageResult.setItems(teacherModels);
         return pageResult;
     }

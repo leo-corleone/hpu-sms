@@ -15,7 +15,6 @@ public interface OnlineUserService extends IService<OnlineUser> {
 
     void recordLogin(LoginModel login , HttpServletRequest request);
 
-
     Boolean offline(List<OnlineUser> users);
 
     Boolean offline();

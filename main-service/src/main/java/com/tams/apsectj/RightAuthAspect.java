@@ -5,6 +5,7 @@ import com.tams.dto.AjaxResult;
 import com.tams.enums.ResponseCode;
 import com.tams.exception.base.BusinessException;
 import com.tams.service.UserRoleService;
+import com.tams.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -14,7 +15,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Method;
 
 /**
@@ -27,11 +27,7 @@ import java.lang.reflect.Method;
 @Slf4j
 public class RightAuthAspect {
 
-
-    @Resource
-    private UserRoleService userRoleService;
-
-    @Pointcut("execution( * com.tams.controller.*.* (..))")
+    @Pointcut("@annotation(com.tams.annotation.Permission)")
     public void rightPointcut(){};
 
     @Around("rightPointcut()")
@@ -45,6 +41,7 @@ public class RightAuthAspect {
             if (permission.isLog()){
                 log.info("permission --> class: [{}] method: [{}]  right: [{}] operation: [{}]", jp.getTarget().getClass().getName() , method.getName() , permission.right() , permission.operation());
             }
+            UserRoleService userRoleService = SpringUtil.getBean(UserRoleService.class);
             boolean b = userRoleService.verifyRight(permission);
             if (!b){
                 return AjaxResult.error(ResponseCode.UNRight.code, "权限不足 请联系管理员");
