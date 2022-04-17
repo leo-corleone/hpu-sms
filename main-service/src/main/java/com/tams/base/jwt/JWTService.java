@@ -24,7 +24,7 @@ public class JWTService {
   public String createToken(String sysUser){
 
     Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.MINUTE , JWTConstant.TIME);
+    calendar.add(Calendar.HOUR , JWTConstant.TIME);
 
     return  JWT.create()
                .withClaim(JWTConstant.CLAIM, sysUser)

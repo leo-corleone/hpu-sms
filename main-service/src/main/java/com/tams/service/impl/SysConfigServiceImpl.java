@@ -27,7 +27,17 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper , SysConfi
 
     @Override
     public SysConfig getByKey(String configKey) {
-      return  this.lambdaQuery().eq(SysConfig::getConfigKey , configKey).one();
+
+        String value = redisService.getValue(RedisConstant.USER_EXPIRE_TIME);
+        SysConfig sysConfig = this.lambdaQuery().eq(SysConfig::getConfigKey, configKey).one();
+        if (StringUtils.isNullOrEmpty(value)){
+            redisService.cacheValue(RedisConstant.USER_EXPIRE_TIME , sysConfig.getConfigValue());
+        }
+        if (!value.equals(sysConfig.getConfigValue())){
+            sysConfig.setConfigValue(value);
+            updateById(sysConfig);
+        }
+        return sysConfig;
     }
 
     @Override

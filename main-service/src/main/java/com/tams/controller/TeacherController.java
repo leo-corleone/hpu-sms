@@ -30,6 +30,10 @@ public class TeacherController {
         return AjaxResult.succ(teacherService.getList(page));
     }
 
+    @GetMapping("/list/all")
+    public AjaxResult getAll(PageParam page){
+        return AjaxResult.succ(teacherService.list());
+    }
 
     @GetMapping("/{id}")
     public AjaxResult get(@PathVariable Long id){

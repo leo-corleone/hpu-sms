@@ -3,9 +3,10 @@ package com.tams.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.tams.base.jwt.JWTService;
-import com.tams.base.nats.NatsService;
 import com.tams.base.redis.RedisService;
 import com.tams.base.redis.util.RedisConstant;
+import com.tams.base.websocket.WSService;
+import com.tams.base.websocket.model.UserWsModel;
 import com.tams.domain.Student;
 import com.tams.domain.Teacher;
 import com.tams.domain.UserRole;
@@ -23,8 +24,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author swiChen
@@ -51,9 +50,8 @@ public class SysLoginService {
    private UserRoleService userRoleService;
 
    @Resource
-   private NatsService natsService;
+   private WSService wsService;
 
-   private final Lock lock = new ReentrantLock();
 
    public String login(LoginModel login){
 
@@ -111,11 +109,15 @@ public class SysLoginService {
        String k = RedisConstant.getRedisK(login.getRole());
        k = k+login.getUsername();
        if (redisService.exists(k)){
-           log.info("用户: {} role:{} 被覆盖登陆" , login.getUsername() , login.getRole().getRole());
-           //  发送nats通知  账号已在别处登陆
-//               natsClient.publish("","");
-           String subject = login.getRole().getRole()+"."+login.getUsername();
-           natsService.LoginNats(subject , null);
+           log.info("用户: {} role:{} 在别处重新登陆" , login.getUsername() , login.getRole().getRole());
+           UserWsModel userWsModel = new UserWsModel();
+           userWsModel.setId(login.getUsername());
+           userWsModel.setRole(login.getRole().getRole().toUpperCase());
+           wsService.reportWsLoginOut(userWsModel);
+//           //  发送nats通知  账号已在别处登陆
+////               natsClient.publish("","");
+//           String subject = login.getRole().getRole()+"."+login.getUsername();
+//           natsService.LoginNats(subject , null);
        }
    }
 

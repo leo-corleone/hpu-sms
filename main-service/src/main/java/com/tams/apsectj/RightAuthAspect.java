@@ -10,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.Method;
 
@@ -22,12 +20,12 @@ import java.lang.reflect.Method;
  * @date 2022/3/11
  **/
 
-@Configuration
-@Aspect
+//@Configuration
+//@Aspect
 @Slf4j
 public class RightAuthAspect {
 
-    @Pointcut("@annotation(com.tams.annotation.Permission)")
+    @Pointcut("execution(* com.tams.controller.*.*(..))")
     public void rightPointcut(){};
 
     @Around("rightPointcut()")

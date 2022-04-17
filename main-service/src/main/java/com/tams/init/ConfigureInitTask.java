@@ -1,10 +1,9 @@
 package com.tams.init;
 
-import com.tams.service.OnlineUserService;
+import com.tams.service.MonitorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import javax.annotation.Resource;
 import java.util.concurrent.Executors;
@@ -18,16 +17,15 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @Slf4j
-@Profile("prod")
+//@Profile("prod")
 public class ConfigureInitTask implements InitializingBean {
 
     @Resource
-    private OnlineUserService onlineUserService;
+    private MonitorService monitorService;
 
     private void autoOffline(){
         log.info("开始检测不在线用户.....");
-        onlineUserService.autoOffline();
-        log.info("结束检测不在线用户....");
+        monitorService.autoOffline();
     }
 
 

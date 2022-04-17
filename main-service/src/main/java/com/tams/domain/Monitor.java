@@ -18,8 +18,8 @@ import java.util.Date;
  **/
 @Accessors(chain = true)
 @Data
-@TableName("online_user")
-public class OnlineUser implements Serializable {
+@TableName("monitor")
+public class Monitor implements Serializable {
 
     @TableId
     private Integer id;

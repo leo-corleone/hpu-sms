@@ -30,7 +30,7 @@ public enum RightTypeEnum {
 
     DEPARTMENT("学院"),
 
-    ONLINE("在线"),
+    MONITOR("监控"),
 
     CONFIG("配置"),
 

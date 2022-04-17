@@ -1,5 +1,8 @@
 package com.tams.base.websocket;
 
+import com.alibaba.fastjson.JSON;
+import com.tams.base.websocket.model.UserWsModel;
+import com.tams.model.ResultModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -7,6 +10,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -17,21 +21,24 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Component
-@ServerEndpoint("/websocket/{userId}")
+@ServerEndpoint("/ws/{role}/{userId}")
 public class WebSocketService {
 
 
     // 记录当前在线连接数
     private static AtomicInteger onlineCount = new AtomicInteger(0);
 
-
+    private static ConcurrentHashMap<Session, UserWsModel> users = new ConcurrentHashMap<>();
 
     // 连接建立成功调用的方法
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") String uid) throws EncodeException, IOException {
-
+    public void onOpen(Session session, @PathParam("role") String role , @PathParam("userId") String uid) throws EncodeException, IOException {
         onlineCount.incrementAndGet(); // 在线数加1
-        log.info("有新连接加入: {}---{} , 当前在线人数为: {}",session.getId() , uid, onlineCount.get());
+        log.info("ws 连接加入: role [{}] , id [{}] , 当前人数 [{}] ",role , uid , onlineCount.get());
+        UserWsModel userModel = new UserWsModel();
+        userModel.setRole(role);
+        userModel.setId(uid);
+        users.put(session , userModel);
 
 
     }
@@ -40,8 +47,13 @@ public class WebSocketService {
     @OnClose
     public void onClose(Session session) {
         onlineCount.decrementAndGet(); // 在线数加1
-        log.info("有新连接加入: {} , 当前在线人数为: {}", session.getId() , onlineCount.get());
-
+        log.info("关闭ws连接 : {} , 当前在线人数为: {}", session.getId() , onlineCount.get());
+        users.remove(session);
+        try {
+            session.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -49,26 +61,30 @@ public class WebSocketService {
     @OnMessage
     public void onMessage(String message , Session session) {
 
-        log.info("服务端收到客户端[{}] 的消息：{}", session.getId() , message);
-        this.sendMessage(message, session);
-
     }
 
     @OnError
     public void onError(Session session , Throwable error) {
-
         log.error("发生错误");
         error.printStackTrace();
-
     }
 
 
+    public static void sendMessage(UserWsModel userModel , ResultModel resultModel){
+        users.forEach((session , user)->{
+            if (user.getRole().equals(userModel.getRole()) && user.getId().equals(userModel.getId()) && session.isOpen()){
+                sendMessage(resultModel , session);
+            }
+        });
+    }
+
     // 服务端发送消息给客户端
 
-    private void sendMessage(String message, Session toSession) {
+    private static void sendMessage(ResultModel resultModel, Session toSession) {
         try {
-            log.info("服务端给客户端[{}]发送消息{}", toSession.getId(), message);
-            toSession.getBasicRemote().sendText(message);
+
+            log.info("服务端给客户端[{}]  发送消息{}", toSession.getId(), resultModel);
+            toSession.getBasicRemote().sendText(JSON.toJSONString(resultModel));
         } catch (Exception e) {
             log.error("服务端发送消息给客户端失败：{}", e);
         }

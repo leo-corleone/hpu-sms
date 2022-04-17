@@ -9,6 +9,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  * @author swiChen
  * @date 2022/1/6
  **/
+
 @Configuration
 public class WebSocketConfig {
 
@@ -21,7 +22,6 @@ public class WebSocketConfig {
      */
     @Bean
     public ServerEndpointExporter serverEndpointExporter() {
-
 
         return new ServerEndpointExporter();
     }

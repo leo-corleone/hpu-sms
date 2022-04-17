@@ -5,20 +5,24 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tams.base.redis.RedisService;
 import com.tams.base.redis.util.RedisConstant;
-import com.tams.domain.OnlineUser;
+import com.tams.base.websocket.WSService;
+import com.tams.base.websocket.model.UserWsModel;
+import com.tams.domain.Monitor;
 import com.tams.domain.Student;
 import com.tams.domain.Teacher;
 import com.tams.enums.RoleEnum;
-import com.tams.mapper.OnlineUserMapper;
+import com.tams.mapper.MonitorMapper;
 import com.tams.model.LoginModel;
 import com.tams.model.SysUser;
-import com.tams.service.OnlineUserService;
+import com.tams.service.MonitorService;
 import com.tams.service.StudentService;
 import com.tams.service.TeacherService;
 import com.tams.util.SysUserContextHandler;
 import eu.bitwalker.useragentutils.UserAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
@@ -34,7 +38,7 @@ import java.util.stream.Collectors;
  **/
 @Service
 @Slf4j
-public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineUser> implements OnlineUserService {
+public class MonitorServiceImpl extends ServiceImpl<MonitorMapper, Monitor> implements MonitorService {
 
     private static final String[] ADDR_HEADER = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
             "X-Real-IP" };
@@ -50,11 +54,15 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
     @Resource
     private RedisService redisService;
 
-    @Override
-    public void recordLogin(LoginModel login , HttpServletRequest request) {
+    @Resource
+    private WSService wsService;
 
+    @Override
+    public void recordLogin(LoginModel login) {
+        ServletRequestAttributes requestAttributes= (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
         UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("user-agent"));
-        OnlineUser onlineUser = new OnlineUser();
+        Monitor onlineUser = new Monitor();
         onlineUser.setBrowser(userAgent.getBrowser().getName());
         onlineUser.setDevice(userAgent.getOperatingSystem().getDeviceType().getName());
         onlineUser.setOperationSystem(userAgent.getOperatingSystem().getName());
@@ -74,17 +82,19 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
             onlineUser.setName(teacher.getName());
         }
 
-        OnlineUser onlineUserIn = this.lambdaQuery().eq(OnlineUser::getUId , uId).one();
-        if (ObjectUtil.isNotEmpty(onlineUserIn)){
-            onlineUser.setId(onlineUserIn.getId());
-            this.updateById(onlineUser);
-            return;
-        }
-        this.save(onlineUser);
+
+            Monitor onlineUserIn = this.lambdaQuery().eq(Monitor::getUId , uId).one();
+            if (ObjectUtil.isNotEmpty(onlineUserIn)){
+                onlineUser.setId(onlineUserIn.getId());
+                this.updateById(onlineUser);
+                return;
+            }
+            this.save(onlineUser);
+
     }
 
     @Override
-    public Boolean offline(List<OnlineUser> onlines) {
+    public Boolean offline(List<Monitor> onlines) {
         if (ObjectUtil.isEmpty(onlines)){
             log.info("在线用户数据不能为空");
             return false;
@@ -96,7 +106,10 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
             boolean isRemove = redisService.remove(cacheK);
             if (exists || !isRemove){
                 removeById(onlineUser);
-                // TODO 应该发送nats通知的
+                UserWsModel userWsModel = new UserWsModel();
+                userWsModel.setRole(onlineUser.getRole().getRole().toUpperCase());
+                userWsModel.setId(String.valueOf(onlineUser.getUId()));
+                wsService.reportWsAutoLoginOut(userWsModel);
             }
         });
         return true;
@@ -106,8 +119,8 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
     public Boolean offline() {
 
         SysUser sysUser = SysUserContextHandler.getSysUser();
-        //TODO 删除redis
-        return this.lambdaUpdate().eq(OnlineUser::getUId , sysUser.getUId()).eq(OnlineUser::getRole , sysUser.getRole()).remove();
+        redisService.remove(RedisConstant.getRedisK(sysUser.getRole())+sysUser.getUId());
+        return this.lambdaUpdate().eq(Monitor::getUId , sysUser.getUId()).eq(Monitor::getRole , sysUser.getRole()).remove();
     }
 
     @Override
@@ -122,7 +135,7 @@ public class OnlineUserServiceImpl extends ServiceImpl<OnlineUserMapper, OnlineU
             return  key.substring(index+1);
         }).collect(Collectors.toSet());
 
-        List<OnlineUser> list = this.lambdaQuery().notIn(OnlineUser::getUId, ids).list();
+        List<Monitor> list = this.lambdaQuery().notIn(Monitor::getUId, ids).list();
         return ObjectUtil.isNotEmpty(list) || list.size() > 0 ? offline(list) : false;
     }
 

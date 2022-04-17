@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.tams.domain.ClassRoom;
 import com.tams.dto.PageParam;
 import com.tams.dto.PageResult;
+import com.tams.model.OptionsModel;
+
+import java.util.Set;
 
 /**
  * @author swiChen
@@ -15,8 +18,8 @@ public interface ClassRoomService extends IService<ClassRoom>{
 
     boolean updateClassRoom(ClassRoom classRoom);
 
-
     boolean addClassRoom(ClassRoom classRoom);
 
+    Set<OptionsModel> getClassRoomType();
 
 }

@@ -7,13 +7,16 @@ import com.github.pagehelper.PageHelper;
 import com.tams.domain.ClassRoom;
 import com.tams.dto.PageParam;
 import com.tams.dto.PageResult;
+import com.tams.enums.ClassRoomTypeEnum;
 import com.tams.enums.ResponseCode;
 import com.tams.exception.base.BusinessException;
 import com.tams.mapper.ClassRoomMapper;
+import com.tams.model.OptionsModel;
 import com.tams.service.ClassRoomService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author swiChen
@@ -67,6 +70,31 @@ public class ClassRoomServiceImpl
             throw new BusinessException(classRoom.getName() + "已存在", 333);
         }
         return save(classRoom);
+    }
+
+    @Override
+    public Set<OptionsModel> getClassRoomType() {
+
+        Set<OptionsModel> set = new HashSet<>();
+        List<ClassRoom> classRooms = this.list();
+        Map<ClassRoomTypeEnum, List<ClassRoom>> collect = classRooms.stream().collect(Collectors.groupingBy(ClassRoom::getType));
+        collect.forEach((type, classRoomList)-> {
+            OptionsModel optionsModel = new OptionsModel();
+            optionsModel.setValue(type.name());
+            optionsModel.setLabel(type.getDesc());
+            List<OptionsModel> list = new ArrayList<>(classRoomList.size());
+            classRoomList.forEach(classRoom -> {
+                OptionsModel optionsModel1 = new OptionsModel();
+                optionsModel1.setLabel(classRoom.getName());
+                optionsModel1.setValue(String.valueOf(classRoom.getName()));
+                optionsModel1.setDesc(classRoom.getStatus());
+                list.add(optionsModel1);
+            });
+            optionsModel.setChildren(list);
+            set.add(optionsModel);
+        });
+
+        return set;
     }
 
     private boolean checkDuplicateRoom(ClassRoom classRoom){

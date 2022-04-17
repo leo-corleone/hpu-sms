@@ -30,6 +30,17 @@ public class ClassRoomController {
       return AjaxResult.succ(classRoomService.getList(pageParam));
     }
 
+    @GetMapping("/list/all")
+    public AjaxResult getall(){
+        return AjaxResult.succ(classRoomService.list());
+    }
+
+    @GetMapping("/type/list")
+    public AjaxResult typeList(){
+        return AjaxResult.succ(classRoomService.getClassRoomType());
+    }
+
+
     @Permission(operation = OperationTypeEnum.W , right = RightTypeEnum.CLASSROOM)
     @PostMapping("/update")
     public AjaxResult updateClassRoom(@RequestBody ClassRoom classRoom){

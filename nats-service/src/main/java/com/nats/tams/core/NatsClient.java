@@ -21,7 +21,7 @@ public class NatsClient {
 
     private  Dispatcher dispatcher;
     
-    private final Options options;
+    private Options options;
 
     private Boolean isClosed = false;
 
@@ -47,7 +47,18 @@ public class NatsClient {
         }
 
             this.options = natsBuilder.connectionListener((Connection conn, ConnectionListener.Events type)->{
-                log.info("nats connect success [{}]" , conn.getConnectedUrl() );
+
+                if (type == ConnectionListener.Events.RECONNECTED){
+                    this.options = conn.getOptions();
+                    try {
+                        checkConnection();
+                    } catch (Exception e) {
+                        log.error("nats connection error");
+                        throw new NatsException(e.getMessage());
+                    }
+                }
+                log.info("[{}] [{}]" ,type.toString() , conn.getConnectedUrl() );
+
             }).build();
 
         try {
@@ -130,7 +141,6 @@ public class NatsClient {
             try {
                 this.nc.close();
                 this.isClosed = true;
-                log.info("nats connection closed");
             } catch (InterruptedException e) {
                 this.isClosed = false;
                 log.error("nats connection close error");

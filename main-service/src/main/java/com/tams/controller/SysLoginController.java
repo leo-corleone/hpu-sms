@@ -1,18 +1,14 @@
 package com.tams.controller;
 
-import com.tams.annotation.Permission;
 import com.tams.dto.AjaxResult;
-import com.tams.enums.OperationTypeEnum;
-import com.tams.enums.RightTypeEnum;
 import com.tams.model.LoginModel;
-import com.tams.service.OnlineUserService;
+import com.tams.service.MonitorService;
 import com.tams.service.impl.SysLoginService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,14 +24,14 @@ public class SysLoginController {
     private SysLoginService sysLoginService;
 
     @Resource
-    private OnlineUserService onlineUserService;
+    private MonitorService monitorService;
 
     @PostMapping("/login")
-    public AjaxResult<Object> login(@RequestBody LoginModel login,HttpServletRequest request){
+    public AjaxResult<Object> login(@RequestBody LoginModel login){
 
         Map<String , String> map = new HashMap<>();
         String token = sysLoginService.login(login);
-        onlineUserService.recordLogin(login , request);
+        monitorService.recordLogin(login);
         map.put("token" , token);
         return AjaxResult.succ(map);
     }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Logback默认配置的步骤 -->
+    <!-- (1). 尝试在classpath下查找文件logback-test.xml； -->
+    <!-- (2). 如果文件不存在，则查找文件logback.xml； -->
+    <!-- (3). 如果两个文件都不存在，logback用Bas icConfigurator自动对自己进行配置，这会导致记录输出到控制台。 -->
+
+    <!--定义日志文件的存储地址 勿在 LogBack的配置中使用相对路径 -->
+    <property name="LOG_HOME" value="C:/logs" />
+    <property name="AppName" value="tams" />
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_HOME}/${AppName}.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--日志文件保留天数 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+        <!--日志文件最大的大小,并且最大单个文件超过 10MB 才会生成新的日志文件, -->
+         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+         <MaxFileSize>1MB</MaxFileSize>
+         </triggeringPolicy>
+    </appender>
+
+    <!-- 日志过滤器，name表示需要过滤的包 level表示过滤级别 trace info debug error all 等等，不区分大小写 -->
+    <!-- show parameters for hibernate sql 专为 Hibernate 定制 -->
+    <!-- <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" /> -->
+    <!-- <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="DEBUG" /> -->
+    <!-- <logger name="org.hibernate.SQL" level="DEBUG" /> -->
+    <!-- <logger name="org.hibernate.engine.QueryParameters" level="DEBUG" /> -->
+    <!-- <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" /> -->
+
+    <!--myibatis log configure -->
+     <logger name="com.apache.ibatis" level="DEBUG" />
+     <logger name="java.sql.Connection" level="DEBUG" />
+     <logger name="java.sql.Statement" level="DEBUG" />
+     <logger name="java.sql.PreparedStatement" level="DEBUG" />
+
+    <!-- 日志输出级别,将root的打印级别设置为"DEBUG"，指定了名字为"STDOUT"的appender。如果按天生成改为ref="FILE" -->
+    <!-- 日志打印级别， trace > debug > info > warn > error -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+    <!-- 首先执行<logger name="xxx" />，将级别为"INFO"及大于"INFO"的日志信息传递给root，本身打印到名为"STDOUT"的appender处理； -->
+    <!-- root可以接受<logger name=""/>下级传递的信息，将级别为"DEBUG"及大于"DEBUG"的日志交给已经配置好的名为"STDOUT"的appender处理，"STDOUT"appender将信息打印到控制台； -->
+
+</configuration>

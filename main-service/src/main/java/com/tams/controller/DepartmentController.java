@@ -29,6 +29,20 @@ public class DepartmentController {
       return AjaxResult.succ(departmentService.getList(pageParam));
     }
 
+    @GetMapping("/list/all")
+    public AjaxResult getAll(){
+        return AjaxResult.succ(departmentService.list());
+    }
+
+    @GetMapping("/teacher/list")
+    public AjaxResult departmentTeacher(){
+        return AjaxResult.succ(departmentService.departmentTeacher());
+    }
+
+    @GetMapping("/class/list")
+    public AjaxResult departmentClass(){
+        return AjaxResult.succ(departmentService.departmentTeacher());
+    }
 
     @Permission(operation = OperationTypeEnum.W , right = RightTypeEnum.DEPARTMENT)
     @PostMapping("/update")

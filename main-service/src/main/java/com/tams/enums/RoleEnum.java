@@ -11,13 +11,13 @@ import lombok.AllArgsConstructor;
 public enum RoleEnum {
 
 
-    ROOT("root"),
+    ROOT("ROOT"),
 
-    ADMIN("admin"),
+    ADMIN("ADMIN"),
 
-    TEACHER("teacher"),
+    TEACHER("TEACHER"),
 
-    STUDENT("student");
+    STUDENT("STUDENT");
 
     public static RoleEnum StringParseRole(String role){
 

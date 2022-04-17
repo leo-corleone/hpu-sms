@@ -10,7 +10,6 @@ import com.tams.service.ClassService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author swiChen
@@ -26,8 +25,13 @@ public class ClassController {
 
  @Permission(right = RightTypeEnum.CLASS , operation = OperationTypeEnum.R)
  @GetMapping("/list")
- public AjaxResult<List<ClassModel>> getList(PageParam pageParam){
+ public AjaxResult getList(PageParam pageParam){
    return AjaxResult.succ(classService.getList(pageParam));
+ }
+
+ @GetMapping("/department/list")
+ public AjaxResult getList(){
+  return AjaxResult.succ(classService.classDepartmentList());
  }
 
  @Permission(right = RightTypeEnum.CLASS , operation = OperationTypeEnum.W)
